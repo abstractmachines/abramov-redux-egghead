@@ -1,3 +1,5 @@
+import {createStore} from 'redux'
+
 console.log('hi')
 
 // reducer function
@@ -11,9 +13,6 @@ const counter = (state = 0, action) => {
       return state;
   }
 }
-
-// replace this with import {createStore} from 'redux';
-const { createStore } = Redux;
 
 const store = createStore(counter);
 
