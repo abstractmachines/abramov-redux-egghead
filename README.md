@@ -42,7 +42,7 @@ const counter = (state = 0, action) => {
       return state;
   }
 }
-
+// create store
 const store = createStore(counter);
 
 // initial state is 0:
@@ -59,6 +59,38 @@ store.dispatch({ type: 'FOO' })
 console.log(store.getState()); // 1
 ```
 
+#### DOM Example: 3 Redux Store methods
+
+- store.getState()
+- store.dispatch(action)
+- store.subscribe()
+
+```
+import {createStore} from 'redux'
+
+// reducer function, same as before
+
+// create store
+const store = createStore(counter);
+
+// getState() method is rendered,
+const render = () => {
+  document.body.innerText = store.getState()
+}
+
+// subscribe for callback invoked upon state change,
+store.subscribe(render)
+
+// show initial state by invoking render function once directly,
+render()
+
+// dispatch an action.
+document.addEventListener('click', () => {
+  store.dispatch({ type: 'INCREMENT'})
+})
+```
+Expected result: DOM will show 0,
+upon clicking, DOM will show 1 ... 2 ... 3 ...  etc.
 
 
 ## ES6 stuff

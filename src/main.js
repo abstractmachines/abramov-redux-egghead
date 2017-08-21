@@ -12,14 +12,18 @@ const counter = (state = 0, action) => {
   }
 }
 
+// create store
 const store = createStore(counter);
 
-console.log(store.getState()); // 0
+const render = () => {
+  document.body.innerText = store.getState()
+}
 
-store.dispatch({ type: 'INCREMENT' })
+store.subscribe(render)
 
-console.log(store.getState()); // 1
+// show initial state:
+render()
 
-store.dispatch({ type: 'FOO' })
-
-console.log(store.getState()); // 1
+document.addEventListener('click', () => {
+  store.dispatch({ type: 'INCREMENT'})
+})
