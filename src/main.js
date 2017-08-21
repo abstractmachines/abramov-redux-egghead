@@ -1,6 +1,6 @@
 import {createStore} from 'redux'
 
-// reducer function
+// reducer function w/ ES6 default params
 const counter = (state = 0, action) => {
   switch(action.type) {
       case 'INCREMENT':

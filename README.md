@@ -10,21 +10,21 @@ Go to `localhost:3000`
 
 ## Working Redux Examples
 
-There are 3 primary methods for the Redux store:
+#### There are 3 primary methods for the Redux store:
 
 - store.getState()
 
- Gets current state of store
+    Gets current state of store
 
 - store.dispatch(action)
 
- Dispatches an action
+    Dispatches an action
 
- Most commonly used
+    Most commonly used
 
 - store.subscribe()
 
- Registers a callback which is called whenever an action gets dispatched so that you can update the UI to reflect current app state (think Publish-Subscribe or Observer patterns here, which would be dependent on whether subject has a registered list of listeners or whether it's simple broadcast)
+   Registers a callback which is called whenever an action gets dispatched so that you can update the UI to reflect current app state (think Publish-Subscribe or Observer patterns here, which would be dependent on whether subject has a registered list of listeners or whether it's simple broadcast)
 
 
 #### Console Example: Dispatch and getState
@@ -51,3 +51,16 @@ store.dispatch({ type: 'INCREMENT' })
 
 console.log(store.getState()); // 1
 ```
+
+
+
+## ES6 stuff
+
+### ES6 Default Params
+```
+const counter = (state = 0, action)
+```
+
+- `state = 0` initializes state to initial state
+
+- Very similar to parameter initialization in C++
