@@ -92,7 +92,9 @@ store.dispatch({ type: 'FOO' })
 console.log(store.getState()); // 1
 ```
 
-#### DOM Example: 3 Redux Store methods
+#### Naive DOM Example: 3 Redux Store methods
+
+We will use the native DOM API instead of React here.
 
 - store.getState()
 - store.dispatch(action)
@@ -124,6 +126,67 @@ document.addEventListener('click', () => {
 ```
 Expected result: DOM will show 0,
 upon clicking, DOM will show 1 ... 2 ... 3 ...  etc.
+
+#### DOM example: use React instead of using native DOM API
+
+```
+// Ensure you install babel-preset-react to render JSX as well as these.
+import {createStore} from 'redux'
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+// reducer function, same as before
+
+/** Since change is stored in Redux store, Counter component can be a
+* simple function.
+* @param JSX rendered in args by name and defined within the arrow function
+* @return All JSX required for rendering of this Component (function).
+* Recall that all adjacent JSX elements must be wrapped in enclosing DIV tag.
+*/
+const Counter = ({
+  value,
+  onIncrement,
+  onDecrement
+}) => (
+  <div>
+    <h1>{value}</h1>
+    <button onClick={onIncrement}>+</button>
+    <button onClick={onDecrement}>-</button>
+  </div>
+);
+
+// create store
+const store = createStore(counter);
+
+/** Render is called anytime store state changes, so I can pass current
+* state of store as a prop to root component.
+* Dispatch actions as props in the rendered Component.
+* @return Rendered Component specified, inside root element of app.
+*/
+const render = () => {
+  ReactDOM.render(
+    <Counter
+      value={store.getState()}
+      onIncrement={() =>
+        store.dispatch({
+          type: 'INCREMENT'
+        })
+      }
+      onDecrement={() =>
+        store.dispatch({
+          type: 'DECREMENT'
+        })
+      }
+    />,
+    document.getElementById('root')
+  )
+}
+
+store.subscribe(render)
+
+// show initial state:
+render()
+```
 
 
 ## ES6 stuff
