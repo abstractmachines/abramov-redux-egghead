@@ -2,7 +2,7 @@ import {createStore} from 'redux'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-// reducer function w/ ES6 default params
+// reducer function w/ ES6 default params. Specifies how next state calculated.
 const counter = (state = 0, action) => {
   switch(action.type) {
       case 'INCREMENT':
@@ -15,9 +15,9 @@ const counter = (state = 0, action) => {
 }
 
 /** Since change is stored in Redux store, Counter component can be a
-* simple function.
-* @param JSX rendered in args by name and defined within the arrow function
-* @return All JSX required for rendering of this Component (function).
+* simple function (stateless, too).
+* @param props, which are defined as callbacks in this dumb component
+* @return Props, bound to the event handlers of this component.
 * Recall that all adjacent JSX elements must be wrapped in enclosing DIV tag.
 */
 const Counter = ({
@@ -38,7 +38,9 @@ const store = createStore(counter);
 /** Render is called anytime store state changes, so I can pass current
 * state of store as a prop to root component.
 * Dispatch actions as props in the rendered Component.
-* @return Rendered Component specified, inside root element of app.
+* Pass callbacks that call store.dispatch with appropriate actions.
+* @return Dispatch actions get specified here for the callbacks
+* which we bound to the event handlers in the Component. Other props (value).
 */
 const render = () => {
   ReactDOM.render(
@@ -59,6 +61,7 @@ const render = () => {
   )
 }
 
+// subscribe to Redux store so render() runs any time state changes.
 store.subscribe(render)
 
 // show initial state:
