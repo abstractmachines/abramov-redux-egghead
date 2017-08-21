@@ -27,7 +27,7 @@ Go to `localhost:3000`
    Registers a callback which is called whenever an action gets dispatched so that you can update the UI to reflect current app state (think Publish-Subscribe or Observer patterns here, which would be dependent on whether subject has a registered list of listeners or whether it's simple broadcast)
 
 
-#### Console Example: Dispatch and getState
+#### Console Example: Dispatch action and get new state
 ```
 import {createStore} from 'redux'
 
@@ -45,9 +45,16 @@ const counter = (state = 0, action) => {
 
 const store = createStore(counter);
 
+// initial state is 0:
 console.log(store.getState()); // 0
 
+// new state is 1:
 store.dispatch({ type: 'INCREMENT' })
+
+console.log(store.getState()); // 1
+
+// next state is still 1, action is unknown:
+store.dispatch({ type: 'FOO' })
 
 console.log(store.getState()); // 1
 ```
