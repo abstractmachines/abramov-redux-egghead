@@ -1,7 +1,5 @@
 import {createStore} from 'redux'
 
-console.log('hi')
-
 // reducer function
 const counter = (state = 0, action) => {
   switch(action.type) {
@@ -16,4 +14,8 @@ const counter = (state = 0, action) => {
 
 const store = createStore(counter);
 
-console.log(store.getState());
+console.log(store.getState()); // 0
+
+store.dispatch({ type: 'INCREMENT' })
+
+console.log(store.getState()); // 1
