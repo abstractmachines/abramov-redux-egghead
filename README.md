@@ -1,4 +1,5 @@
-# WebpackBin project: Learning Redux with Dan Abramov
+# Learning Redux with Dan Abramov
+These are my notes, paraphrasing what I've learned from watching [this video series,](https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree) along with some other CS concepts and things along the way.
 
 ## Start
 
@@ -7,6 +8,38 @@
 `npm start`
 
 Go to `localhost:3000`
+
+## Principles of Redux
+### First Principle: All state managed in single object
+This is called the state, or state tree
+### Second Principle: State Tree is read-only
+To change it, you must dispatch an action (a plain JS object which describes that change, in which type is the only required property).
+
+>>> Just as state is the minimal representation of the app's data,
+
+>>> Action is the minimal representation of changes to that data.
+
+Usually, the action is a string because strings are serializable.
+
+### Third Principle: A pure function takes previous state + action being dispatched to create a new state
+
+Since it's a pure function, it will hence return a new object instead of mutating the existing object. Hence, you can see that *all* of Redux operates on Functional Programming concepts, with pure functions that do not have side effects and create new data instead of mutating existing data. For more information, see [Eric Elliot's article on Pure Functions on Medium](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-pure-function-d1c076bec976).
+
+The Reducer Function creates a new object for the whole state, but keeps reference to previous versions (for 'time travel'), which can also be thought of as 'record and replay of state.'
+
+Redux marries the React concept of `"UI/View Layer being the most predictable when it is a pure function of the app state"` which has caught on in Ember and other things, along with `"state mutations in app are a pure function."`
+
+In conclusion, it's the Reducer function which manages this immutable state concept in Redux.
+
+---
+
+`Dispatch` an action; that'll update state.
+
+`Subscribe` to that state change to update the DOM.
+
+Use `getState()` to render the current state.
+
+---
 
 ## Working Redux Examples
 
