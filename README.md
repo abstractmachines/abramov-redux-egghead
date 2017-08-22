@@ -254,6 +254,10 @@ With the Expect library and deepFreeze, we emulate with Abramov what we did in t
 
 Here are some tests.
 
+
+Test: Add states to counter
+
+
 ```
 /* ***** ***** TEST : ADD / REMOVE COUNTERS ***** ***** */
 /**
@@ -284,6 +288,8 @@ testAddCounter();
 console.log('All tests passed, testAddCounter.')
 ```
 
+Test: remove states from counter
+
 ```
 const rmvCounter = (list) => {
   return list.slice(1)
@@ -306,6 +312,10 @@ const testRmvCounter = () => {
 testRmvCounter();
 console.log('All tests passed, testRmvCounter.')
 ```
+
+Test: remove particular items out of states
+
+this will (kinda) illustrate why we have time travel in Redux
 
 ```
 /** Slice [0, 2] out of [0, 1, 2]
@@ -343,6 +353,8 @@ const testTimeTravel = () => {
 testTimeTravel();
 console.log('All tests passed, timeTravel.')
 ```
+
+Test: increment the counter
 
 ```
 /* ***** ***** TEST : INCREMENT / DECREMENT COUNTERS ***** ***** */
