@@ -1,5 +1,14 @@
-# Learning Redux with Dan Abramov
+# Learning Redux with Dan Abramov (and Eric Elliott)
 These are my notes, paraphrasing what I've learned from watching [this video series,](https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree) along with some other CS concepts and things along the way.
+
+# Table of Contents
+1. Start
+2. Principles
+3. Basic examples (console, DOM, and React)
+4. Functional Programming (FP) and Redux time travel
+5. FP examples
+6. ES6 treats
+7. Why spread operator isn't always the answer for nested data
 
 ## Start
 
@@ -23,9 +32,11 @@ Usually, the action is a string because strings are serializable.
 
 ### Third Principle: A pure function takes previous state + action being dispatched to create a new state
 
-Since it's a pure function, it will hence return a new object instead of mutating the existing object. Hence, you can see that *all* of Redux operates on Functional Programming concepts, with pure functions that do not have side effects and create new data instead of mutating existing data. For more information, see [Eric Elliot's article on Pure Functions on Medium](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-pure-function-d1c076bec976).
+Since it's a pure function, it will hence return a new object instead of mutating the existing object. Hence, you can see that *all* of Redux operates on Functional Programming concepts, with pure functions that do not have side effects and create new data instead of mutating existing data. For more information, see [Eric Elliott's article on Pure Functions on Medium](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-pure-function-d1c076bec976).
 
 The Reducer Function creates a new object for the whole state, but keeps reference to previous versions (for 'time travel'), which can also be thought of as 'record and replay of state.'
+
+There are examples of Redux time travel stuff after the first Basic Examples.
 
 Redux marries the React concept of `"UI/View Layer being the most predictable when it is a pure function of the app state"` which has caught on in Ember and other things, along with `"state mutations in app are a pure function."`
 
@@ -41,7 +52,7 @@ Use `getState()` to render the current state.
 
 ---
 
-## Working Redux Examples
+## Very Basic Redux Examples
 
 #### There are 3 primary methods for the Redux store:
 
@@ -201,6 +212,43 @@ store.subscribe(render)
 render()
 ```
 
+### Functional Programming and Time Travel
+
+>>> **Use:** Methods that create new data instead of mutating it.
+
+>>> **Don't use:** Destructive, mutating methods.
+
+>>> **Why?:** Time travel.
+
+### Time travel in Redux
+This is essentially a "record and replay" feature. If all state is concatenated rather than destroyed and replaced with a new state, then state tree in a counter like this (hardware people would call it an *up counter*), then the state tree would read `0 1 2 3 4 5` ...
+
+You can easily imagine going backwards through that time/counter array... `5 4 3 2 1 0`. That's time travel in Redux, essentially.
+
+If you blow away your state, aka mutate it --> no time travel. How is state "recorded?" It's recorded with **Reducers.**
+
+#### Reducers must be a pure function
+... in order for time travel to be possible/easy to do. [Eric Elliott](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-pure-function-d1c076bec976)
+
+So, save the state. Use functional programming and immutable data. Here's how.
+
+
+For functional programming ... don't change data, make new stuff.
+
+| Data Type      | Use            | Don't Use  |
+| ------------- |:-------------:| -----:|
+| ARRAYS      | concat(), slice(), ...spread | push(), splice()  |
+| OBJECTS      | Object.assign(), ...spread      |   pass by ref --> mutate |
+
+#### About objects
+[In Eric Elliott's article on Pure Functions on Medium,](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-pure-function-d1c076bec976), he describes how JavaScript function arguments are pass by value for primitives, and pass by reference for Objects. (This works similarly to the JS equality operator.) That means that any function which passes in an object and mutates that object, has `side effects` outside of the function scope; it mutates an object by reference, and that object will be referred to elsewhere. This is called an `impure function` - a pure function being the opposite.
+
+In the tutorial, Eric uses deepClone() and deepFreeze() from lodash inside of a function. In that function, deep copies objects, and mutates (and returns) only the new, mutated copy.
+
+The original copy is protected with deepFreeze(), outside of the scope of the function above; by doing so, we protect that object from mutation within function scope. We could also do this by hand with a reference equality.
+
+Abramov uses the same concepts as Elliott.
+
 
 ## ES6 stuff
 
@@ -212,3 +260,9 @@ const counter = (state = 0, action)
 - `state = 0` initializes state to initial state
 
 - Very similar to parameter initialization in C++
+
+
+## Spread operator, Object.assign, and shallow vs deep copy
+There's a lot of spread operator code out there - just remember that it's [shallow copy - only a single level down a tree,](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator) and hence not suitable for nested data. For nested data, use `Object.assign`.
+
+Spread operator does concatenation and a [bunch of other cool stuff.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator)
