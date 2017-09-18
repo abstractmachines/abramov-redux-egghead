@@ -2,6 +2,8 @@
 These are my notes, paraphrasing what I've learned from watching [this video series,](https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree) along with some other CS concepts and things along the way.
 
 # Table of Contents
+### Part I : Intro to Redux, Counter App
+*Videos 0 - 9. See code in main-old.js*
 1. Start
 2. Principles
 3. Very basic examples (console, DOM, and React)
@@ -9,6 +11,13 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 5. FP examples (tests!)
 6. ES6 treats
 7. Why spread operator isn't always the answer for nested data
+
+### Part II : Moar Redux, Todo App
+*Videos 10 - 30. See code in main.js*
+
+1. Object.assign() with a todo
+2. Stuff here, too!
+
 
 ## Start
 
@@ -407,6 +416,9 @@ const counter = (state = 0, action)
 - Very similar to parameter initialization in C++
 
 
+
+# Part II: Moar Redux, and the Todo app
+
 ## Spread operator, Object.assign, and shallow vs deep copy
 There's a lot of spread operator code out there - just remember that it's [shallow copy - only a single level down a tree,](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator) and hence not suitable for nested data. For nested data, use `Object.assign`.
 
@@ -421,3 +433,38 @@ Object.assign( {}, source, source, source)
 The first argument in Object.assign() is the empty `target object` that everything else that is a param will be copied into (i.e., all other params are considered 'sources'). The first param is an empty object so that we can ensure that we do not overwrite any existing data; we are creating/returning a new object.
 
 Object.assign() is in the ES6 standard. You need to use Babel, another polyfill, or just use the Object spread operator for ES7. It's enabled in Babel in the stage 2 preset.
+
+### Example: Using Object.assign() with a todo:
+Video #11:
+```
+
+const toggleTodo = (todo) => {
+  // Option 1: mutate the todo object and cause trouble!
+  // todo.completed = !todo.completed
+  // return todo
+  // Option 2: instead of mutating existing data, create new data:
+  return Object.assign({}, todo, {completed: !todo.completed})
+};
+
+const testToggleToDo = () => {
+  const todoBefore = {
+    id: 0,
+    text: 'Learn Redux',
+    completed: false
+  };
+  const todoAfter = {
+    id: 0,
+    text: 'Learn Redux',
+    completed: true
+  };
+
+  deepFreeze(todoBefore)
+
+  expect(
+    toggleTodo(todoBefore)
+  ).toEqual(todoAfter)
+};
+
+testToggleToDo()
+console.log('tested todo!')
+```
