@@ -436,6 +436,7 @@ Object.assign() is in the ES6 standard. You need to use Babel, another polyfill,
 
 ### Example: Using Object.assign() with a todo:
 Video #11:
+*Inconsistent semicolons here, Dan uses them a lot, and I didn't remove them all*
 ```
 
 const toggleTodo = (todo) => {
