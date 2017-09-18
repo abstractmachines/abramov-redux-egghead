@@ -411,3 +411,13 @@ const counter = (state = 0, action)
 There's a lot of spread operator code out there - just remember that it's [shallow copy - only a single level down a tree,](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator) and hence not suitable for nested data. For nested data, use `Object.assign`.
 
 Spread operator does concatenation and a [bunch of other cool stuff.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator)
+
+>>> Object.assign is in ES6 standard
+
+### Object.assign() syntax
+```
+Object.assign( {}, source, source, source)
+```
+The first argument in Object.assign() is the empty `target object` that everything else that is a param will be copied into (i.e., all other params are considered 'sources'). The first param is an empty object so that we can ensure that we do not overwrite any existing data; we are creating/returning a new object.
+
+Object.assign() is in the ES6 standard. You need to use Babel, another polyfill, or just use the Object spread operator for ES7. It's enabled in Babel in the stage 2 preset.
