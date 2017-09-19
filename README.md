@@ -16,7 +16,10 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 *Videos 10 - 30. See code in main.js*
 
 1. Object.assign() with a todo
-2. Stuff here, too!
+2. Writing a Todo list reducer that returns a single element if called with empty array as state and ADD action.
+3. Writing a reducer (toggling a todo)
+4. Writing action with id that matches an element, adding another case to switch statement in reducer, and using the Object spread operator. (video 12)
+5. **Reducer Composition:** Breaking the reducer down into multiple functions (single responsibility principle) (video 13)
 
 
 ## Start
@@ -434,11 +437,10 @@ The first argument in Object.assign() is the empty `target object` that everythi
 
 Object.assign() is in the ES6 standard. You need to use Babel, another polyfill, or just use the Object spread operator for ES7. It's enabled in Babel in the stage 2 preset.
 
-### Example: Using Object.assign() with a todo:
-Video #11:
+### Example (video 11): Using Object.assign() with a todo:
 *Inconsistent semicolons here, Dan uses them a lot, and I didn't remove them all*
-```
 
+```
 const toggleTodo = (todo) => {
   // Option 1: mutate the todo object and cause trouble!
   // todo.completed = !todo.completed
@@ -468,4 +470,179 @@ const testToggleToDo = () => {
 
 testToggleToDo()
 console.log('tested todo!')
+```
+
+### Example (video 11): Writing a Todo list reducer (toggling a todo)
+- When reducer is called with empty array as state, and an `ADD_TODO` action, it returns an array with a single TODO element.
+
+```
+// reducer.
+const todos = (state = [], action) => {
+  // action type is a string. when it matches, returns...
+  switch(action.type) {
+    case 'ADD_TODO':
+    return [
+      // all items from original array,
+      ...state,
+      // and, new item.
+      {
+        id: action.id,
+        text: action.text,
+        completed: false
+      }
+    ];
+    // reducers always return current state for any unknown action.
+    default:
+      return state;
+  }
+};
+
+// add an action, and test that code is correct.
+const testAddTodo = () => {
+  const stateBefore = []
+  const action = { // action
+    type: 'ADD_TODO',
+    id: 0,
+    text: 'Learn Redux'
+  }
+  const stateAfter = [{ // state
+    id: 0,
+    text: 'Learn Redux',
+    completed: false
+  }]
+
+  deepFreeze(stateBefore)
+  deepFreeze(action)
+
+  expect(
+    todos(stateBefore, action)
+  ).toEqual(stateAfter)
+}
+
+testAddTodo()
+console.log('all tests passed!')
+```
+
+### Example (video 12): Writing an action that toggles element with matching id. Use Object spread operator
+
+```
+// add an action that toggles completed status of element
+// with same ID as action.
+const testToggleTodo = () => {
+  const stateBefore = [
+    {
+      id: 0,
+      text: 'Learn Redux',
+      completed: false
+    },
+    {
+      id: 1,
+      text: 'Play synthesizers',
+      completed: false
+    }
+  ]
+  const action = {
+    type: 'TOGGLE_TODO',
+    id: 1
+  }
+  const stateAfter = [
+    {
+      id: 0,
+      text: 'Learn Redux',
+      completed: false
+    },
+    {
+      id: 1,
+      text: 'Play synthesizers',
+      completed: true
+    }
+  ]
+  deepFreeze(stateBefore)
+  deepFreeze(action)
+
+  expect(
+    todos(stateBefore, action)
+  ).toEqual(stateAfter)
+}
+```
+
+and add in this case for the switch statement for reducer:
+```
+case 'TOGGLE_TODO':
+return state.map(todo => {
+  if (todo.id !== action.id) {
+    return todo;
+  }
+  return {
+    ...todo, // Object spread operator
+    completed: !todo.completed
+  }
+})
+```
+
+### Example: Reducer Composition with arrays (video 13)
+
+- Breaking reducer down into multiple functions (single responsibility principle)
+
+- Previously, we wrote a reducer that adds a new todo, or toggles a todo.
+
+>>> A function that does more than 1 thing is often hard to understand. Use the single responsibility principle (SOLID, more).
+
+- How is the todos array updated?
+- How are individual todos updated?
+
+
+#### Use Multiple Reducers, separate responsibilities
+
+**Top level Reducer function invokes the other reducer function for each case:**
+- `state` refers to list of todo's.
+- This is the `top level reducer`.
+
+```
+// REDUCER: `state` refers to list of todos
+const todos = (state = [], action) => {
+  // action type is a string. when it matches, returns...
+  switch(action.type) {
+    case 'ADD_TODO':
+    return [
+      ...state,
+      todo(undefined, action)
+    ];
+    case 'TOGGLE_TODO':
+    return state.map(t => todo(t, action))
+    // reducers always return current state for any unknown action.
+    default:
+      return state;
+  }
+};
+```
+
+
+- Breaking out the reducer function... into a helper function.
+- `state` refers to individual todo, instead of list of todo's.
+- Replace `todo.property` with `state.property`
+
+**Helper Reducer function: create and update todo's in response to action:**
+
+```
+const todo = (state, action) => {
+  switch(action.type) {
+    case 'ADD_TODO':
+      return {
+        id: action.id,
+        text: action.text,
+        completed: false
+      };
+    case 'TOGGLE_TODO':
+      if (state.id !== action.id) {
+        return state;
+      }
+      return {
+        ...state, // Object spread operator
+        completed: !state.completed
+      };
+    default:
+      return state
+  }
+}
 ```
