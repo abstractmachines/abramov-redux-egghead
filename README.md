@@ -4,7 +4,7 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 # Table of Contents
 ## [Part I : Intro to Redux, Counter App](#i)
 *Videos 0 - 9. See code in videos1-9.js*
-1. Start
+1. Start, and ES6 Exports/Imports
 2. Principles
 3. Very basic examples (console, DOM, and React)
 4. Functional Programming (FP) and Redux time travel
@@ -41,6 +41,76 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 `npm start`
 
 `localhost:3000`
+
+# ES6 Exports and Imports
+
+You will note code like the following:
+
+`import {createStore, combineReducers} from 'redux'`
+
+and
+
+`import React, { Component } from 'react'`
+
+What's that mean?
+
+## Named and default exports
+
+### Inline exporting
+If you export something as a module with a name:
+
+`export class SomeClass extends React.Component.....`
+
+`export function SomeFunc ....`
+
+These are called "named exports." What a "named export" means is that the module
+has a name. In the above cases, the name is `SomeClass` or `SomeFunc`.
+
+That seems intuitively obvious, so perhaps a better way to explain this is to talk about default exports.
+
+`export default class SomeClass extends React.Component.....`
+
+In the above case, `SomeClass` is exported as a **default export, and default exports
+do not have to have a name. They are exported by default.**
+
+A file can only have one default export, but it can have many named exports.
+
+### Exporting at end of file
+The above conventions name inline, i.e. "export class" and "export default class."
+
+Let's define two things we want to export as named exports in a file:
+
+`class oneClass extends React.Component.....`
+
+`function oneFunc .....`
+
+Let's export them:
+`export { oneClass, oneFunc }`
+
+That's it!
+
+But what about if we have a default export in addition to our named exports?
+
+`class defaultClass extends React.Component.....`
+
+`class oneClass extends React.Component.....`
+
+`function oneFunc .....`
+
+`export defaultClass, { oneClass, oneFunc }`
+
+Note the syntax, how the default export is outside of the curly braces?
+
+Same thing with imports.
+
+Hence, we can see that this:
+
+`import React, { Component } from 'react'`
+
+... imports React, a default export, and Component, a named export, from react.
+
+That's it!
+
 
 # Principles of Redux
 ## First Principle: All state managed in single object
@@ -431,7 +501,7 @@ const counter = (state = 0, action)
 - Very similar to parameter initialization in C++
 
 
-<a href='#ii' id='ii' class='anchor' aria-hidden='true'>Part I</a>
+<a href='#ii' id='ii' class='anchor' aria-hidden='true'>Part II</a>
 # Part II: Moar Redux, and the Todo app
 
 ## Spread operator, Object.assign, and shallow vs deep copy
@@ -848,7 +918,7 @@ const todoApp = combineReducers({
 see videos10-16.js for full code example.
 
 
-<a href='#iii' id='iii' class='anchor' aria-hidden='true'>Part I</a>
+<a href='#iii' id='iii' class='anchor' aria-hidden='true'>Part III</a>
 # Part III: React View layer for our Redux Reducers
 
 ## React and ReactDOM

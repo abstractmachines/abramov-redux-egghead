@@ -1,5 +1,5 @@
 import {createStore, combineReducers} from 'redux'
-import React from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import expect from 'expect'
 import deepFreeze from 'deep-freeze'
@@ -70,96 +70,19 @@ const todoApp = combineReducers({
   visibilityFilter
 })
 
-/* ***** STORE and DISPATCH ***** */
-// video 14: create a store and check its initial state...
+/* ***** STORE ***** */
 const store = createStore(todoApp)
-console.log('initial state:')
-console.log(store.getState()) // initially, just an empty array...
-console.log('----------------')
 
-// dispatch an action to add a new todo. It will have completed: false
-console.log('Dispatching ADD_TODO.')
-store.dispatch({
-  type: 'ADD_TODO',
-  id: 1,
-  text: 'Play synthesizers'
-})
-// this will show one object, id 1, text: play synthesizers, completed: false
-console.log('current state:')
-console.log(store.getState())
-
-// Play them synths!
-console.log('Dispatching TOGGLE_TODO. Play them synths! Completed true!')
-store.dispatch({
-  type: 'TOGGLE_TODO',
-  id: 1,
-  text: 'Play synthesizers'
-})
-// same object, but completed: true. Because you played synths.
-console.log('current state:')
-console.log(store.getState())
-
-// add an action, and test that code is correct.
-const testAddTodo = () => {
-  const stateBefore = []
-  const action = { // action
-    type: 'ADD_TODO',
-    id: 0,
-    text: 'Learn Redux'
-  }
-  const stateAfter = [{ // state
-    id: 0,
-    text: 'Learn Redux',
-    completed: false
-  }]
-
-  deepFreeze(stateBefore)
-  deepFreeze(action)
-
-  expect(
-    todos(stateBefore, action)
-  ).toEqual(stateAfter)
+// render() updates DOM in response to current app state
+render = () => {
+  ReactDOM.render(
+    <TodoApp />,
+    document.getElementById('root')
+  )
 }
 
-// add an action that toggles completed status of element
-// with same ID as action.
-const testToggleTodo = () => {
-  const stateBefore = [
-    {
-      id: 0,
-      text: 'Learn Redux',
-      completed: false
-    },
-    {
-      id: 1,
-      text: 'Play synthesizers',
-      completed: false
-    }
-  ]
-  const action = {
-    type: 'TOGGLE_TODO',
-    id: 1
-  }
-  const stateAfter = [
-    {
-      id: 0,
-      text: 'Learn Redux',
-      completed: false
-    },
-    {
-      id: 1,
-      text: 'Play synthesizers',
-      completed: true
-    }
-  ]
-  deepFreeze(stateBefore)
-  deepFreeze(action)
+// subscribe to those store changes
+store.subscribe(render)
 
-  expect(
-    todos(stateBefore, action)
-  ).toEqual(stateAfter)
-}
-
-testAddTodo()
-testToggleTodo()
-console.log('all tests passed!')
+// once to render initial state
+render()
