@@ -1,4 +1,20 @@
-// code for videos 0 - 10
+// code for videos 0 - 9
+/* accompanying html:
+<!doctype html>
+  <html>
+    <head>
+      <meta charset="utf-8"/>
+      <title> JS Bin </title>
+    </head>
+    <body>
+      <div id="root">
+
+      </div>
+      <script src="main.js"></script>
+    </body>
+  </html>
+*/
+
 import {createStore} from 'redux'
 import React from 'react'
 import ReactDOM from 'react-dom'

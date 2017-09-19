@@ -2,8 +2,8 @@
 These are my notes, paraphrasing what I've learned from watching [this video series,](https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree) along with some other CS concepts and things along the way.
 
 # Table of Contents
-### Part I : Intro to Redux, Counter App
-*Videos 0 - 9. See code in main-old.js*
+## Part I : Intro to Redux, Counter App
+*Videos 0 - 9. See code in videos1-9.js*
 1. Start
 2. Principles
 3. Very basic examples (console, DOM, and React)
@@ -12,8 +12,8 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 6. ES6 treats
 7. Why spread operator isn't always the answer for nested data
 
-### Part II : Moar Redux, Todo App
-*Videos 10 - 30. See code in main.js*
+## Part II : Moar Redux, Todo App
+*Videos 10 - 16. See code in videos10-16.js*
 
 1. **Object.assign()** with a todo
 2. Writing a Todo list **reducer** that returns a single element if called with empty array as state and ADD action.
@@ -23,9 +23,12 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 6. **Creating a Redux Store, Dispatching an Action, and Reducer Composition with Objects** (video 14)
 7. Reducer Composition Pattern with **combineReducers()**... and using **Object literal shorthand notation** (video 15)
 8. Skipped: writing combineReducer() from scratch (link [here](https://egghead.io/lessons/javascript-redux-implementing-combinereducers-from-scratch))
-9. View layer: Redux React todo (video 17)
+9. Wrap up: all of code
 
-## Start
+
+1. View layer: Redux React todo (video 17)
+
+# Start
 
 `npm install`
 
@@ -33,10 +36,10 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 
 Go to `localhost:3000`
 
-## Principles of Redux
-### First Principle: All state managed in single object
+# Principles of Redux
+## First Principle: All state managed in single object
 This is called the state, or state tree
-### Second Principle: State Tree is read-only
+## Second Principle: State Tree is read-only
 To change it, you must dispatch an action (a plain JS object which describes that change, in which type is the only required property).
 
 >>> Just as state is the minimal representation of the app's data,
@@ -45,7 +48,7 @@ To change it, you must dispatch an action (a plain JS object which describes tha
 
 Usually, the action is a string because strings are serializable.
 
-### Third Principle: A pure function takes previous state + action being dispatched to create a new state
+## Third Principle: A pure function takes previous state + action being dispatched to create a new state
 
 Since it's a pure function, it will hence return a new object instead of mutating the existing object. Hence, you can see that *all* of Redux operates on Functional Programming concepts, with pure functions that do not have side effects and create new data instead of mutating existing data. For more information, see [Eric Elliott's article on Pure Functions on Medium](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-pure-function-d1c076bec976).
 
@@ -67,9 +70,9 @@ Use `getState()` to render the current state.
 
 ---
 
-## Very Basic Redux Examples
+# Very Basic Redux Examples
 
-#### There are 3 primary methods for the Redux store:
+## There are 3 primary methods for the Redux store:
 
 - store.getState()
 
@@ -86,7 +89,7 @@ Use `getState()` to render the current state.
    Registers a callback which is called whenever an action gets dispatched so that you can update the UI to reflect current app state (think Publish-Subscribe or Observer patterns here, which would be dependent on whether subject has a registered list of listeners or whether it's simple broadcast)
 
 
-#### Console Example: Dispatch action and get new state
+## Console Example: Dispatch action and get new state
 ```
 import {createStore} from 'redux'
 
@@ -118,7 +121,7 @@ store.dispatch({ type: 'FOO' })
 console.log(store.getState()); // 1
 ```
 
-#### Naive DOM Example: 3 Redux Store methods
+## Naive DOM Example: 3 Redux Store methods
 
 We will use the native DOM API instead of React here.
 
@@ -153,7 +156,7 @@ document.addEventListener('click', () => {
 Expected result: DOM will show 0,
 upon clicking, DOM will show 1 ... 2 ... 3 ...  etc.
 
-#### DOM example: use React instead of using native DOM API
+## DOM example: use React instead of using native DOM API
 
 ```
 // Ensure you install babel-preset-react to render JSX as well as these.
@@ -227,7 +230,7 @@ store.subscribe(render)
 render()
 ```
 
-## Functional Programming and Redux Time Travel
+# Functional Programming and Redux Time Travel
 
 >>> **Use:** Methods that create new data instead of mutating it.
 
@@ -235,14 +238,14 @@ render()
 
 >>> **Why?:** Time travel.
 
-### Time travel in Redux
+## Time travel in Redux
 This is essentially a "record and replay" feature. If all state is concatenated rather than destroyed and replaced with a new state, then state tree in a counter like this (hardware people would call it an *up counter*), then the state tree would read `0 1 2 3 4 5` ...
 
 You can easily imagine going backwards through that time/counter array... `5 4 3 2 1 0`. That's time travel in Redux, essentially.
 
 If you blow away your state, aka mutate it --> no time travel. How is state "recorded?" It's recorded with **Reducers.**
 
-#### Reducers must be a pure function
+## Reducers must be a pure function
 ... in order for time travel to be possible/easy to do. [Eric Elliott](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-pure-function-d1c076bec976)
 
 So, save the state. Use functional programming and immutable data. Here's how.
@@ -255,7 +258,7 @@ For functional programming ... don't change data, make new stuff.
 | ARRAYS      | concat(), slice(), ...spread | push(), splice()  |
 | OBJECTS      | Object.assign(), ...spread      |   pass by ref --> mutate |
 
-#### About objects
+## About objects
 [In Eric Elliott's article on Pure Functions on Medium,](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-pure-function-d1c076bec976), he describes how JavaScript function arguments are pass by value for primitives, and pass by reference for Objects. (This works similarly to the JS equality operator.) That means that any function which passes in an object and mutates that object, has `side effects` outside of the function scope; it mutates an object by reference, and that object will be referred to elsewhere. This is called an `impure function` - a pure function being the opposite.
 
 In the tutorial, Eric uses deepClone() and deepFreeze() from lodash inside of a function. In that function, deep copies objects, and mutates (and returns) only the new, mutated copy.
@@ -410,9 +413,9 @@ testIncrementCounter();
 console.log('All tests passed, testIncrementCounter.')
 ```
 
-## ES6 stuff
+# ES6 stuff
 
-### ES6 Default Params
+## ES6 Default Params
 ```
 const counter = (state = 0, action)
 ```
@@ -432,7 +435,7 @@ Spread operator does concatenation and a [bunch of other cool stuff.](https://de
 
 >>> Object.assign is in ES6 standard
 
-### Object.assign() syntax
+## Object.assign() syntax
 ```
 Object.assign( {}, source, source, source)
 ```
@@ -440,7 +443,7 @@ The first argument in Object.assign() is the empty `target object` that everythi
 
 Object.assign() is in the ES6 standard. You need to use Babel, another polyfill, or just use the Object spread operator for ES7. It's enabled in Babel in the stage 2 preset.
 
-### Example (video 11): Using Object.assign() with a todo:
+## Example (video 11): Using Object.assign() with a todo:
 *Inconsistent semicolons here, Dan uses them a lot, and I didn't remove them all*
 
 ```
@@ -475,7 +478,7 @@ testToggleToDo()
 console.log('tested todo!')
 ```
 
-### Example (video 11): Writing a Todo list reducer (toggling a todo)
+## Example (video 11): Writing a Todo list reducer (toggling a todo)
 - When reducer is called with empty array as state, and an `ADD_TODO` action, it returns an array with a single TODO element.
 
 ```
@@ -526,7 +529,7 @@ testAddTodo()
 console.log('all tests passed!')
 ```
 
-### Example (video 12): Writing an action that toggles element with matching id. Use Object spread operator
+## Example (video 12): Writing an action that toggles element with matching id. Use Object spread operator
 
 ```
 // add an action that toggles completed status of element
@@ -583,10 +586,9 @@ return state.map(todo => {
 })
 ```
 
-### Example: Reducer Composition Pattern with arrays (video 13)
+## Example: Reducer Composition Pattern with arrays (video 13)
 
-
-#### Reducer Composition Pattern:
+### Reducer Composition Pattern:
 
 - Breaking reducer down into multiple functions (single r
 - Combine those reducers together.
@@ -600,7 +602,7 @@ return state.map(todo => {
 Answer: break your reducer apart so these questions are easier to answer.
 
 
-#### Use Multiple Reducers, separate responsibilities
+## Use Multiple Reducers, separate responsibilities
 
 **Top level Reducer function invokes the other reducer function for each case:**
 
@@ -654,7 +656,7 @@ const todo = (state, action) => {
 }
 ```
 
-### Creating a Redux Store, Dispatching an Action (video 14)
+## Creating a Redux Store, Dispatching an Action (video 14)
 
 If we create a Redux store here after we've written our reducer function(s), we can see how things work under the hood a little bit.
 
@@ -702,7 +704,7 @@ console.log(store.getState())
 
 Cool!
 
-### Reducer Composition Pattern with Objects (video 14)
+## Reducer Composition Pattern with Objects (video 14)
 
 This section will describe the logic of this pattern, and we will work through it with code.
 
@@ -790,9 +792,10 @@ const todoApp = (state = {}, action) => {
 
 /* ***** STORE and DISPATCH has Top Level Reducer ***** */
 const store = createStore(todoApp)
+// all the other dispatch stuff, same as before
 ```
 
-### Reducer Composition Pattern with combineReducer() (video 15)
+## Reducer Composition Pattern with combineReducer() (video 15)
 
 **combineReducers:** The keys of the combineReducers object will match with the
 fields of the state object that combineReducers will manage.
@@ -831,7 +834,10 @@ const todoApp = combineReducers({
 })
 ```
 
-### Writing combineReducer() from scratch
+## Writing combineReducer() from scratch
 - Skipped for now
 - Link [here](https://egghead.io/lessons/javascript-redux-implementing-combinereducers-from-scratch)
--
+
+
+## Part II Wrap up: Code
+see videos10-16.js for full code example.
