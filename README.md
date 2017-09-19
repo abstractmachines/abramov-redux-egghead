@@ -19,7 +19,8 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 2. Writing a Todo list reducer that returns a single element if called with empty array as state and ADD action.
 3. Writing a reducer (toggling a todo)
 4. Writing action with id that matches an element, adding another case to switch statement in reducer, and using the Object spread operator. (video 12)
-5. **Reducer Composition:** Breaking the reducer down into multiple functions (single responsibility principle) (video 13)
+5. **Reducer Composition:**  Breaking the reducer down into multiple functions; top level reducer calls another reducer helper function (single responsibility principle) (video 13)
+6. **Creating a Redux Store, Dispatching an Action, and Reducer Composition with Objects** (video 14)
 
 
 ## Start
@@ -646,3 +647,54 @@ const todo = (state, action) => {
   }
 }
 ```
+
+### Creating a Redux Store, Dispatching an Action, and Reducer Composition with Objects (video 14)
+
+If we create a Redux store here after we've written our reducer function(s), we can see how things work under the hood a little bit.
+
+// Your Reducers...
+
+Create Store:
+```
+// create a store and check its initial state...
+const store = createStore(todos)
+console.log('initial state:')
+console.log(store.getState()) // initially, just an empty array...
+console.log('----------------')
+```
+
+Dispatch an action to add a new TODO. Since the reducer assigns completed to false, it'll add a single todo with completed: false.
+```
+// video 14: create a store and check its initial state...
+const store = createStore(todos)
+console.log('initial state:')
+console.log(store.getState()) // initially, just an empty array...
+console.log('----------------')
+
+// dispatch an action to add a new todo. It will have completed: false
+console.log('Dispatching ADD_TODO.')
+store.dispatch({
+  type: 'ADD_TODO',
+  id: 1,
+  text: 'Play synthesizers'
+})
+// this will show one object, id 1, text: play synthesizers, completed: false
+console.log('current state:')
+console.log(store.getState())
+
+// Play them synths!
+console.log('Dispatching TOGGLE_TODO. Play them synths! Completed true!')
+store.dispatch({
+  type: 'TOGGLE_TODO',
+  id: 1,
+  text: 'Play synthesizers'
+})
+// same object, but completed: true. Because you played synths.
+console.log('current state:')
+console.log(store.getState())
+```
+
+Cool!
+
+Dan says:
+> Up until this point we've represented the whole state of the application as an array of todos. This works for a simple example. But what if we want to store more information? Such as filtering visibility of completed items?

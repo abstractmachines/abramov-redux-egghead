@@ -48,7 +48,36 @@ const todos = (state = [], action) => {
   }
 };
 
-// // add an action, and test that code is correct.
+/* ***** STORE and DISPATCH ***** */
+// video 14: create a store and check its initial state...
+const store = createStore(todos)
+console.log('initial state:')
+console.log(store.getState()) // initially, just an empty array...
+console.log('----------------')
+
+// dispatch an action to add a new todo. It will have completed: false
+console.log('Dispatching ADD_TODO.')
+store.dispatch({
+  type: 'ADD_TODO',
+  id: 1,
+  text: 'Play synthesizers'
+})
+// this will show one object, id 1, text: play synthesizers, completed: false
+console.log('current state:')
+console.log(store.getState())
+
+// Play them synths!
+console.log('Dispatching TOGGLE_TODO. Play them synths! Completed true!')
+store.dispatch({
+  type: 'TOGGLE_TODO',
+  id: 1,
+  text: 'Play synthesizers'
+})
+// same object, but completed: true. Because you played synths.
+console.log('current state:')
+console.log(store.getState())
+
+// add an action, and test that code is correct.
 const testAddTodo = () => {
   const stateBefore = []
   const action = { // action
