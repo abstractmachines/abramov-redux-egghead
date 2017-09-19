@@ -2,7 +2,7 @@
 These are my notes, paraphrasing what I've learned from watching [this video series,](https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree) along with some other CS concepts and things along the way.
 
 # Table of Contents
-## Part I : Intro to Redux, Counter App [link](#i)
+## [Part I : Intro to Redux, Counter App](#i)
 *Videos 0 - 9. See code in videos1-9.js*
 1. Start
 2. Principles
@@ -12,7 +12,7 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 6. ES6 stuff
 7. Why spread operator isn't always the answer for nested data
 
-## Part II : Moar Redux, Todo App
+## [Part II : Moar Redux, Todo App](#ii)
 *Videos 10 - 16. See code in videos10-16.js*
 
 1. **Object.assign()** with a todo
@@ -25,10 +25,14 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 8. Skipped: writing combineReducer() from scratch (link [here](https://egghead.io/lessons/javascript-redux-implementing-combinereducers-from-scratch))
 9. Wrap up: all of code
 
-# Part I: Intro to Redux; Counter App
-<a href='#i' id='i' class='anchor' aria-hidden='true'>Part I</a>
-
+## [Part III: React View Layer + our Reducers](#iii)
+*Videos 17-30.*
 1. View layer: Redux React todo (video 17)
+2. Rad
+3. Stuff
+
+<a href='#i' id='i' class='anchor' aria-hidden='true'>Part I</a>
+# Part I: Intro to Redux; Counter App
 
 # Start
 
@@ -36,7 +40,7 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 
 `npm start`
 
-Go to `localhost:3000`
+`localhost:3000`
 
 # Principles of Redux
 ## First Principle: All state managed in single object
@@ -427,7 +431,7 @@ const counter = (state = 0, action)
 - Very similar to parameter initialization in C++
 
 
-
+<a href='#ii' id='ii' class='anchor' aria-hidden='true'>Part I</a>
 # Part II: Moar Redux, and the Todo app
 
 ## Spread operator, Object.assign, and shallow vs deep copy
@@ -840,6 +844,14 @@ const todoApp = combineReducers({
 - Skipped for now
 - Link [here](https://egghead.io/lessons/javascript-redux-implementing-combinereducers-from-scratch)
 
-
 ## Part II Wrap up: Code
 see videos10-16.js for full code example.
+
+
+<a href='#iii' id='iii' class='anchor' aria-hidden='true'>Part I</a>
+# Part III: React View layer for our Redux Reducers
+
+## React and ReactDOM
+install these with npm
+
+import them
