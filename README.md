@@ -23,6 +23,7 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 6. **Creating a Redux Store, Dispatching an Action, and Reducer Composition with Objects** (video 14)
 7. Reducer Composition Pattern with **combineReducers()**... and using **Object literal shorthand notation** (video 15)
 8. Skipped: writing combineReducer() from scratch (link [here](https://egghead.io/lessons/javascript-redux-implementing-combinereducers-from-scratch))
+9. View layer: Redux React todo (video 17)
 
 ## Start
 

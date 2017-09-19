@@ -63,29 +63,12 @@ const visibilityFilter = (
   }
 }
 
+// Top Level Reducer
+// see todoApp top level reducer in README
 const todoApp = combineReducers({
   todos,
   visibilityFilter
 })
-
-// Top Level Reducer
-// - To store this information (visibility), no need to change existing reducers.
-//  Use reducer composition: create a new reducer that calls the existing reducers,
-//  to manage parts of its state, and combines their results in a single new state object.
-// - Since it invokes other reducers, it's higher level, and hence, initial state is
-//  not defined. Child reducers todos and todo will populate the state.
-// const todoApp = (state = {}, action) => {
-//   return {
-//     todos: todos(
-//       state.todos,
-//       action
-//     ),
-//     visibilityFilter: visibilityFilter(
-//       state.visibilityFilter,
-//       action
-//     )
-//   }
-// }
 
 /* ***** STORE and DISPATCH ***** */
 // video 14: create a store and check its initial state...
