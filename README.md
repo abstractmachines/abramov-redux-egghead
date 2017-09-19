@@ -15,13 +15,14 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 ### Part II : Moar Redux, Todo App
 *Videos 10 - 30. See code in main.js*
 
-1. Object.assign() with a todo
-2. Writing a Todo list reducer that returns a single element if called with empty array as state and ADD action.
+1. **Object.assign()** with a todo
+2. Writing a Todo list **reducer** that returns a single element if called with empty array as state and ADD action.
 3. Writing a reducer (toggling a todo)
-4. Writing action with id that matches an element, adding another case to switch statement in reducer, and using the Object spread operator. (video 12)
-5. **Reducer Composition:**  Breaking the reducer down into multiple functions; top level reducer calls another reducer helper function (single responsibility principle) (video 13)
+4. Writing **action** with id that matches an element, adding another case to switch statement in reducer, and using the Object spread operator. (video 12)
+5. **Reducer Composition Pattern:**  Covering the logic of this pattern. (video 13)
 6. **Creating a Redux Store, Dispatching an Action, and Reducer Composition with Objects** (video 14)
-
+7. Reducer Composition Pattern with **combineReducers()**... and using **Object literal shorthand notation** (video 15)
+8. Skipped: writing combineReducer() from scratch (link [here](https://egghead.io/lessons/javascript-redux-implementing-combinereducers-from-scratch))
 
 ## Start
 
@@ -581,21 +582,27 @@ return state.map(todo => {
 })
 ```
 
-### Example: Reducer Composition with arrays (video 13)
+### Example: Reducer Composition Pattern with arrays (video 13)
 
-- Breaking reducer down into multiple functions (single responsibility principle)
 
-- Previously, we wrote a reducer that adds a new todo, or toggles a todo.
+#### Reducer Composition Pattern:
 
->>> A function that does more than 1 thing is often hard to understand. Use the single responsibility principle (SOLID, more).
+- Breaking reducer down into multiple functions (single r
+- Combine those reducers together.
+- Top level reducer calls existing "child" reducers and combines their results in a single state object.
+- State is undefined/an empty object on the top level reducer. Initial state is an empty object, so fields are undefined. Child reducers will return initial state, and populates state object for the first time.
+- Actions come in and update state with the part of state that they manage.
+>>> **Motivation:** A function that does more than 1 thing is often hard to understand. Use the single responsibility principle (SOLID, more).
 
 - How is the todos array updated?
 - How are individual todos updated?
+Answer: break your reducer apart so these questions are easier to answer.
 
 
 #### Use Multiple Reducers, separate responsibilities
 
 **Top level Reducer function invokes the other reducer function for each case:**
+
 - `state` refers to list of todo's.
 - This is the `top level reducer`.
 
@@ -618,12 +625,10 @@ const todos = (state = [], action) => {
 };
 ```
 
+**Child Reducer function: create and update todo's in response to action:**
 
-- Breaking out the reducer function... into a helper function.
 - `state` refers to individual todo, instead of list of todo's.
 - Replace `todo.property` with `state.property`
-
-**Helper Reducer function: create and update todo's in response to action:**
 
 ```
 const todo = (state, action) => {
@@ -648,7 +653,7 @@ const todo = (state, action) => {
 }
 ```
 
-### Creating a Redux Store, Dispatching an Action, and Reducer Composition with Objects (video 14)
+### Creating a Redux Store, Dispatching an Action (video 14)
 
 If we create a Redux store here after we've written our reducer function(s), we can see how things work under the hood a little bit.
 
@@ -696,5 +701,136 @@ console.log(store.getState())
 
 Cool!
 
-Dan says:
-> Up until this point we've represented the whole state of the application as an array of todos. This works for a simple example. But what if we want to store more information? Such as filtering visibility of completed items?
+### Reducer Composition Pattern with Objects (video 14)
+
+This section will describe the logic of this pattern, and we will work through it with code.
+
+Later, we will replace this with `combineReducers`.
+> DanUp until this point we've represented the whole state of the application as an array of todos. This works for a simple example. But what if we want to store more information? Such as filtering visibility of completed items?
+
+For that, we can create a new top level reducer that invokes the other reducers.
+
+```
+// REDUCER: todo
+// `state` refers to individual todo, instead of list of todo's.
+// Creating and updating a todo in response to an action:
+const todo = (state, action) => {
+  switch(action.type) {
+    case 'ADD_TODO':
+      return {
+        id: action.id,
+        text: action.text,
+        completed: false
+      };
+    case 'TOGGLE_TODO':
+      if (state.id !== action.id) {
+        return state;
+      }
+      return {
+        ...state, // Object spread operator
+        completed: !state.completed
+      };
+    default:
+      return state
+  }
+}
+
+// REDUCER: todos
+// `state` refers to list of todos
+const todos = (state = [], action) => {
+  // action type is a string. when it matches, returns...
+  switch(action.type) {
+    case 'ADD_TODO':
+    return [
+      ...state,
+      todo(undefined, action)
+    ];
+    case 'TOGGLE_TODO':
+    return state.map(t => todo(t, action))
+    // reducers always return current state for any unknown action.
+    default:
+      return state;
+  }
+};
+
+// Top level REDUCER: visibilityFilter
+// state of visibilityFilter is a string representing current filter;
+// it is changed by SET_VISIBILITY_FILTER action.
+const visibilityFilter = (
+  state = 'SHOW_ALL',
+  action
+) => {
+  switch (action.type) {
+    case 'SET_VISIBILITY_FILTER':
+      return action.filter;
+    default:
+      return state;
+  }
+}
+
+// Top Level Reducer: Combining Reducers
+// - To store this information (visibility), no need to change existing reducers.
+//  Use reducer composition: create a new reducer that calls the existing reducers,
+//  to manage parts of its state, and combines their results in a single new state object.
+// - Since it invokes other reducers, it's higher level, and hence, initial state is
+//  not defined. Child reducers todos and todo will populate the state.
+const todoApp = (state = {}, action) => {
+  return {
+    todos: todos(
+      state.todos,
+      action
+    ),
+    visibilityFilter: visibilityFilter(
+      state.visibilityFilter,
+      action
+    )
+  }
+}
+
+/* ***** STORE and DISPATCH has Top Level Reducer ***** */
+const store = createStore(todoApp)
+```
+
+### Reducer Composition Pattern with combineReducer() (video 15)
+
+**combineReducers:** The keys of the combineReducers object will match with the
+fields of the state object that combineReducers will manage.
+
+`import {createStore, combineReducers} from 'redux'`
+
+Then, replace this:
+```
+const todoApp = (state = {}, action) => {
+  return {
+    todos: todos(
+      state.todos,
+      action
+    ),
+    visibilityFilter: visibilityFilter(
+      state.visibilityFilter,
+      action
+    )
+  }
+}
+```
+With this:
+```
+const todoApp = combineReducers({
+  todos: todos,
+  visibilityFilter: visibilityFilter
+})
+```
+
+With ES6's `Object literal shorthand notation`, we can make it even more succinct.
+Since the key names and the value names are the same, values can be omitted.
+```
+const todoApp = combineReducers({
+  todos,
+  visibilityFilter
+})
+```
+
+### Writing combineReducer() from scratch
+- Skipped for now
+- Link [here](https://egghead.io/lessons/javascript-redux-implementing-combinereducers-from-scratch)
+-

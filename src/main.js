@@ -1,4 +1,4 @@
-import {createStore} from 'redux'
+import {createStore, combineReducers} from 'redux'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import expect from 'expect'
@@ -6,8 +6,7 @@ import deepFreeze from 'deep-freeze'
 
 // TODO app, videos 11-30
 
-// REDUCER COMPOSITION:
-// Breaking out the reducer function... into a helper function
+// REDUCER: todo
 // `state` refers to individual todo, instead of list of todo's.
 // Creating and updating a todo in response to an action:
 const todo = (state, action) => {
@@ -31,7 +30,8 @@ const todo = (state, action) => {
   }
 }
 
-// REDUCER: `state` refers to list of todos
+// REDUCER: todos
+// `state` refers to list of todos
 const todos = (state = [], action) => {
   // action type is a string. when it matches, returns...
   switch(action.type) {
@@ -48,9 +48,48 @@ const todos = (state = [], action) => {
   }
 };
 
+// Top level REDUCER: visibilityFilter
+// state of visibilityFilter is a string representing current filter;
+// it is changed by SET_VISIBILITY_FILTER action.
+const visibilityFilter = (
+  state = 'SHOW_ALL',
+  action
+) => {
+  switch (action.type) {
+    case 'SET_VISIBILITY_FILTER':
+      return action.filter;
+    default:
+      return state;
+  }
+}
+
+const todoApp = combineReducers({
+  todos,
+  visibilityFilter
+})
+
+// Top Level Reducer
+// - To store this information (visibility), no need to change existing reducers.
+//  Use reducer composition: create a new reducer that calls the existing reducers,
+//  to manage parts of its state, and combines their results in a single new state object.
+// - Since it invokes other reducers, it's higher level, and hence, initial state is
+//  not defined. Child reducers todos and todo will populate the state.
+// const todoApp = (state = {}, action) => {
+//   return {
+//     todos: todos(
+//       state.todos,
+//       action
+//     ),
+//     visibilityFilter: visibilityFilter(
+//       state.visibilityFilter,
+//       action
+//     )
+//   }
+// }
+
 /* ***** STORE and DISPATCH ***** */
 // video 14: create a store and check its initial state...
-const store = createStore(todos)
+const store = createStore(todoApp)
 console.log('initial state:')
 console.log(store.getState()) // initially, just an empty array...
 console.log('----------------')
