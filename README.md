@@ -2,14 +2,14 @@
 These are my notes, paraphrasing what I've learned from watching [this video series,](https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree) along with some other CS concepts and things along the way.
 
 # Table of Contents
-## Part I : Intro to Redux, Counter App
+## Part I : Intro to Redux, Counter App [link](#i)
 *Videos 0 - 9. See code in videos1-9.js*
 1. Start
 2. Principles
 3. Very basic examples (console, DOM, and React)
 4. Functional Programming (FP) and Redux time travel
 5. FP examples (tests!)
-6. ES6 treats
+6. ES6 stuff
 7. Why spread operator isn't always the answer for nested data
 
 ## Part II : Moar Redux, Todo App
@@ -25,6 +25,8 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 8. Skipped: writing combineReducer() from scratch (link [here](https://egghead.io/lessons/javascript-redux-implementing-combinereducers-from-scratch))
 9. Wrap up: all of code
 
+# Part I: Intro to Redux; Counter App
+<a href='#i' id='i' class='anchor' aria-hidden='true'>Part I</a>
 
 1. View layer: Redux React todo (video 17)
 
