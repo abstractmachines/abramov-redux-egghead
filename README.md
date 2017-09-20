@@ -1058,6 +1058,11 @@ We want to filter visibility of todos in categories such as :
 - active todos
 - all todos
 
+Here is what this code will accomplish:
+
+![video 18](https://github.com/abstractmachines/abramov-redux-egghead/blob/master/abramov-video19-filter-toggle.gif)
+
+
 #### How it works:
 - `todoApp` is a top-level reducer which combines (invokes) `todos` reducer
   and `visibilityFilter` reducer.
