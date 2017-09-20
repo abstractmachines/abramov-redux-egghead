@@ -48,9 +48,9 @@ const todos = (state = [], action) => {
   }
 };
 
-// Top level REDUCER: visibilityFilter
-// state of visibilityFilter is a string representing current filter;
-// it is changed by SET_VISIBILITY_FILTER action.
+// - Top level REDUCER: visibilityFilter
+// - Returns `action.filter` as next state value for the visibility reducer
+//  IF action param is SET_VISIBILITY_FILTER. ELSE, returns current state.
 const visibilityFilter = (
   state = 'SHOW_ALL',
   action
@@ -63,7 +63,7 @@ const visibilityFilter = (
   }
 }
 
-// Top Level Reducer
+// Top Level Reducer "Root Reducer"
 // see todoApp top level reducer in README
 const todoApp = combineReducers({
   todos,
@@ -73,13 +73,70 @@ const todoApp = combineReducers({
 /* ***** STORE ***** */
 const store = createStore(todoApp)
 
+/**
+ * User needs to click this to switch current visible todos.
+ * filter prop is just a string
+ * children is the contents of the link
+ * @param {Component} class [description]
+ */
+const FilterLink = ({
+  filter,
+  children,
+  currentFilter
+}) => {
+  if (filter === currentFilter) {
+    return <span>{children}</span>
+  }
+  return (
+    <a href='#'
+      onClick={e => {
+        e.preventDefault();
+        store.dispatch({
+          type: 'SET_VISIBILITY_FILTER',
+          filter // pass in filter prop, so we know which filter is clicked
+        });
+      }}
+      >
+        {children} {/* text of the link */}
+      </a>
+  );
+};
+
+// Switch current filter value.
+// Returns array of visible todo's.
+const getVisibleTodos = (
+  todos,
+  filter
+) => {
+  switch(filter) {
+    case 'SHOW_ALL':
+      return todos;
+    case 'SHOW_COMPLETED':
+      return todos.filter(
+        t => t.completed
+      );
+    case 'SHOW_ACTIVE':
+      return todos.filter(
+        t => !t.completed
+      );
+  }
+}
+
 let nextTodoId = 0 // global. increment.
 
-// Bug? wrapped everything in div in a <form>, but that is only rendered briefly...
-// perhaps only after 2nd render cycle?
-// https://github.com/erikras/redux-form/issues/621
+// TODO: wrap the <input> in a <form> so both enter and click work for button submit
+//  This was causing some rendering issues in React.
 class TodoApp extends Component {
   render() {
+    const {
+      todos,
+      visibilityFilter
+    } = this.props
+    // filter todos before rendering them:
+    const visibleTodos = getVisibleTodos(
+      todos,
+      visibilityFilter
+    );
     return (
       <div>
         <input ref={node => {this.input = node}} />
@@ -94,7 +151,7 @@ class TodoApp extends Component {
           Add Todo
         </button>
         <ul>
-          {this.props.todos.map(todo =>
+          {visibleTodos.map(todo =>
             <li key={todo.id}
               onClick={() => {
                 store.dispatch({
@@ -108,18 +165,27 @@ class TodoApp extends Component {
             </li>
           )}
         </ul>
+        <p> Show:
+          {' '}
+          <FilterLink filter='SHOW_ALL' currentFilter={visibilityFilter}>  ALL </FilterLink>
+          {' '}
+          <FilterLink filter='SHOW_ACTIVE' currentFilter={visibilityFilter}>  ACTIVE </FilterLink>
+          {' '}
+          <FilterLink filter='SHOW_COMPLETED' currentFilter={visibilityFilter}>  COMPLETED </FilterLink>
+        </p>
       </div>
     )
   }
 }
 
-// render() is called on every store change.
-// render() updates DOM in response to current app state.
-// current store state is: getState(),
-// and todos are an array that Redux gets from current state of store.
+// - render() is called on every store change.
+// - render() updates DOM in response to current app state.
+// - current store state is: getState(), so any props passed in are from that state,
+//  i.e. propName={store.getState().propName}
 const render = () => {
   ReactDOM.render(
-    <TodoApp todos={store.getState().todos}/>,
+    <TodoApp
+    {...store.getState()}/>,
     document.getElementById('root')
   )
 }

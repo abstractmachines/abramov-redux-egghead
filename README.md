@@ -29,7 +29,8 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 *Videos 17-30.*
 1. View layer: Redux React todo (video 17).
 2. Toggling a todo with onClick() action dispatching (video 18)
-3. Filtering visibility (video 19)
+3. Finishing up Todos UI: Filtering todos visibility (video 19)
+4. All of code so far (videos 11-19) [link](#beforeextraction)
 
 <a href='#i' id='i' class='anchor' aria-hidden='true'>Part I</a>
 # Part I: Intro to Redux; Counter App
@@ -1049,4 +1050,390 @@ Here's the `<li>` within our rendered React Component:
 ```
 
 
-## Todos: filtering visibility of todos with React + Redux (video 18)
+## Finishing up Todos UI: Filtering todos visibility (video 19) (video 19)
+
+We want to filter visibility of todos in categories such as :
+
+- completed todos
+- active todos
+- all todos
+
+#### How it works:
+- `todoApp` is a top-level reducer which combines (invokes) `todos` reducer
+  and `visibilityFilter` reducer.
+
+- the two reducers mentioned above are passed into the Component as props.
+```
+const render = () => {
+  ReactDOM.render(
+    <TodoApp
+    todos={store.getState().todos} visibilityFilter={store.getState().visibilityFilter}
+    />,
+    document.getElementById('root')
+  )
+}
+```
+
+
+- It starts with Component **FilterLink**: a `dispatch call` with an `action` of the type `SET_VISIBILITY_FILTER`.
+
+```
+const FilterLink = ({
+  filter,
+  children,
+  currentFilter
+}) => {
+  if (filter === currentFilter) {
+    return <span>{children}</span>
+  }
+  return (
+    <a href='#'
+      onClick={e => {
+        e.preventDefault();
+        store.dispatch({
+          type: 'SET_VISIBILITY_FILTER',
+          filter // pass in filter prop, so we know which filter is clicked
+        });
+      }}
+      >
+        {children} {/* text of the link */}
+      </a>
+  );
+};
+```
+
+- It passes filter, which is a prop, to the link component, so every one of
+those 3 links is going to have a different filter prop.
+```
+<p> Show:
+  {' '}
+  <FilterLink filter='SHOW_ALL' currentFilter={visibilityFilter}>  ALL </FilterLink>
+  {' '}
+  <FilterLink filter='SHOW_ACTIVE' currentFilter={visibilityFilter}>  ACTIVE </FilterLink>
+  {' '}
+  <FilterLink filter='SHOW_COMPLETED' currentFilter={visibilityFilter}>  COMPLETED </FilterLink>
+</p>
+```
+
+- the store `dispatch function` will call our `root reducer` (aka `top level
+reducer`) with a state and action,
+```
+const store = createStore(todoApp)
+```
+
+- which, in turn, will call the `visibilityFilter reducer` with a part of the
+state and the action. When action type is set to `SET_VISIBILITY_FILTER`, it
+just returns `action.filter` as next state value for the visibility reducer.
+It doesn't care about previous state in that case.
+```
+const visibilityFilter = (
+  state = 'SHOW_ALL',
+  action
+) => {
+  switch (action.type) {
+    case 'SET_VISIBILITY_FILTER':
+      return action.filter;
+    default:
+      return state;
+  }
+}
+```
+
+- the root reducer will use this new field as part of its new state object
+
+- the render function is subscribed to store changes, so it will get that new
+state object and will pass all of its **keys** as **props** to Todoapp
+Component.
+```
+const render = () => {
+  ReactDOM.render(
+    <TodoApp
+    todos={store.getState().todos} visibilityFilter={store.getState().visibilityFilter}
+    />,
+    document.getElementById('root')
+  )
+}
+```
+
+- Both of those props are passed to the `getVisibleTodos` function, which
+calculates what's visible based on incoming action type, using a switch and filter()
+using the action type string.
+Return value is the array of visible todo's. It's used in the render() function to
+enumerate over the visible/filtered todos.
+```
+const getVisibleTodos = (
+  todos,
+  filter
+) => {
+  switch(filter) {
+    case 'SHOW_ALL':
+      return todos;
+    case 'SHOW_COMPLETED':
+      return todos.filter(
+        t => t.completed
+      );
+    case 'SHOW_ACTIVE':
+      return todos.filter(
+        t => !t.completed
+      );
+  }
+}
+```
+
+- visibilityFilter field is also used by `FilterLink` for rendering active links
+based on whether the `filter === currentFilter.`
+
+- For styling of completed/active items, use a `style` attribute (prop)
+
+- For styling of active links:
+
+ -  pass down the `visibilityFilter` prop to every link in the FilterLink Component.
+
+ - pass in the `currentFilter` prop to every link in the FilterLink Component.
+
+ - Inside that FilterLink Component, add a conditional: If filter is currentFilter (if it matches), render a span (unclickable) instead of a link.
+
+#### Optimizations:
+**In the render function, replace specific passing in of props:**
+```
+const render = () => {
+  ReactDOM.render(
+    <TodoApp todos={store.getState().todos} visibilityFilter={store.getState().visibilityFilter}/>,
+    document.getElementById('root')
+  )
+}
+```
+with spread operator:
+```
+const render = () => {
+  ReactDOM.render(
+    <TodoApp {...store.getState()}/>,
+    document.getElementById('root')
+  )
+}
+```
+
+**Destructure your Component props to make your Component code more succinct.**
+
+Instead of using code like this:
+```
+this.props.todos,
+this.props.visibilityFilter
+```
+everywhere,
+
+instead, just inside of the `render()` function of your Component,
+use ES6 destructuring for your props. As such:
+```
+const {
+  todos,
+  visibilityFilter
+} = this.props
+```
+
+Remember that this is the "ES6 equivalent" of:
+```
+const todos = this.props.todos
+const visibilityFilter = this.props.visibilityFilter
+```
+
+### All the code so far: Videos 11-19
+```
+import {createStore, combineReducers} from 'redux'
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
+import expect from 'expect'
+import deepFreeze from 'deep-freeze'
+
+// TODO app, videos 11-19
+
+// REDUCER: todo
+// `state` refers to individual todo, instead of list of todo's.
+// Creating and updating a todo in response to an action:
+const todo = (state, action) => {
+  switch(action.type) {
+    case 'ADD_TODO':
+      return {
+        id: action.id,
+        text: action.text,
+        completed: false
+      };
+    case 'TOGGLE_TODO':
+      if (state.id !== action.id) {
+        return state;
+      }
+      return {
+        ...state, // Object spread operator
+        completed: !state.completed
+      };
+    default:
+      return state
+  }
+}
+
+// REDUCER: todos
+// `state` refers to list of todos
+const todos = (state = [], action) => {
+  // action type is a string. when it matches, returns...
+  switch(action.type) {
+    case 'ADD_TODO':
+    return [
+      ...state,
+      todo(undefined, action)
+    ];
+    case 'TOGGLE_TODO':
+    return state.map(t => todo(t, action))
+    // reducers always return current state for any unknown action.
+    default:
+      return state;
+  }
+};
+
+// - Top level REDUCER: visibilityFilter
+// - Returns `action.filter` as next state value for the visibility reducer
+//  IF action param is SET_VISIBILITY_FILTER. ELSE, returns current state.
+const visibilityFilter = (
+  state = 'SHOW_ALL',
+  action
+) => {
+  switch (action.type) {
+    case 'SET_VISIBILITY_FILTER':
+      return action.filter;
+    default:
+      return state;
+  }
+}
+
+// Top Level Reducer "Root Reducer"
+// see todoApp top level reducer in README
+const todoApp = combineReducers({
+  todos,
+  visibilityFilter
+})
+
+/* ***** STORE ***** */
+const store = createStore(todoApp)
+
+/**
+ * User needs to click this to switch current visible todos.
+ * filter prop is just a string
+ * children is the contents of the link
+ * @param {Component} class [description]
+ */
+const FilterLink = ({
+  filter,
+  children,
+  currentFilter
+}) => {
+  if (filter === currentFilter) {
+    return <span>{children}</span>
+  }
+  return (
+    <a href='#'
+      onClick={e => {
+        e.preventDefault();
+        store.dispatch({
+          type: 'SET_VISIBILITY_FILTER',
+          filter // pass in filter prop, so we know which filter is clicked
+        });
+      }}
+      >
+        {children} {/* text of the link */}
+      </a>
+  );
+};
+
+// Switch current filter value.
+// Returns array of visible todo's.
+const getVisibleTodos = (
+  todos,
+  filter
+) => {
+  switch(filter) {
+    case 'SHOW_ALL':
+      return todos;
+    case 'SHOW_COMPLETED':
+      return todos.filter(
+        t => t.completed
+      );
+    case 'SHOW_ACTIVE':
+      return todos.filter(
+        t => !t.completed
+      );
+  }
+}
+
+let nextTodoId = 0 // global. increment.
+
+// TODO: wrap the <input> in a <form> so both enter and click work for button submit
+//  This was causing some rendering issues in React.
+class TodoApp extends Component {
+  render() {
+    const {
+      todos,
+      visibilityFilter
+    } = this.props
+    // filter todos before rendering them:
+    const visibleTodos = getVisibleTodos(
+      todos,
+      visibilityFilter
+    );
+    return (
+      <div>
+        <input ref={node => {this.input = node}} />
+        <button onClick={() => {
+          store.dispatch({
+            type: 'ADD_TODO',
+            text: this.input.value,
+            id: nextTodoId++
+          })
+          this.input.value = ''
+        }}>
+          Add Todo
+        </button>
+        <ul>
+          {visibleTodos.map(todo =>
+            <li key={todo.id}
+              onClick={() => {
+                store.dispatch({
+                  type: 'TOGGLE_TODO',
+                  id: todo.id
+                })
+              }}
+              style={{ textDecoration: todo.completed ? 'line-through' : 'none'}}
+              >
+              {todo.text}
+            </li>
+          )}
+        </ul>
+        <p> Show:
+          {' '}
+          <FilterLink filter='SHOW_ALL' currentFilter={visibilityFilter}>  ALL </FilterLink>
+          {' '}
+          <FilterLink filter='SHOW_ACTIVE' currentFilter={visibilityFilter}>  ACTIVE </FilterLink>
+          {' '}
+          <FilterLink filter='SHOW_COMPLETED' currentFilter={visibilityFilter}>  COMPLETED </FilterLink>
+        </p>
+      </div>
+    )
+  }
+}
+
+// - render() is called on every store change.
+// - render() updates DOM in response to current app state.
+// - current store state is: getState(), so any props passed in are from that state,
+//  i.e. propName={store.getState().propName}
+const render = () => {
+  ReactDOM.render(
+    <TodoApp
+    {...store.getState()}/>,
+    document.getElementById('root')
+  )
+}
+
+// subscribe to those store changes
+store.subscribe(render)
+
+// once, to render initial state
+render()
+```
