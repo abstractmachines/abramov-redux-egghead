@@ -27,7 +27,7 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 
 ## [Part III: React View Layer + our Reducers](#iii)
 *Videos 17-30.*
-1. View layer: Redux React todo (video 17)
+1. View layer: Redux React todo (video 17), how it works.
 2. Rad
 3. Stuff
 
@@ -921,7 +921,97 @@ see videos10-16.js for full code example.
 <a href='#iii' id='iii' class='anchor' aria-hidden='true'>Part III</a>
 # Part III: React View layer for our Redux Reducers
 
-## React and ReactDOM
-install these with npm
+## Incorporating React and ReactDOM with our reducers
+- Install these with npm.
 
-import them
+- Import them.
+
+### Code (and, an explanation of how it works)
+
+- Reducers here.
+
+- Create Store:
+```
+const store = createStore(todoApp)
+```
+
+- Create global todo id that you increment with each dispatch:
+```
+let nextTodoId = 0 // global. increment.
+```
+
+- Create a typical React Component class... for event handling, dispatch an action!
+
+- It's common for React components to **dispatch actions**;
+- and, to render collections with `map()`:
+```
+class TodoApp extends Component {
+  render() {
+    return (
+      <div>
+        <input ref={node => {this.input = node}} />
+        <button onClick={() => {
+          store.dispatch({
+            type: 'ADD_TODO',
+            text: this.input.value,
+            id: nextTodoId++
+          })
+          this.input.value = ''
+        }}>
+          Add Todo
+        </button>
+        <ul>
+          {this.props.todos.map(todo =>
+            <li key={todo.id}>
+              {todo.text}
+            </li>
+          )}
+        </ul>
+      </div>
+    )
+  }
+}
+```
+
+- render() is called on every store change. (We are not yet working with lifecycle methods.)
+- render() updates DOM in response to current app state.
+- current store state is: getState(),
+- and todos are an array that Redux gets from current state of store.
+const render = () => {
+```
+const render = () => {
+  ReactDOM.render(
+    <TodoApp todos={store.getState().todos}/>,
+    document.getElementById('root')
+  )
+}
+```
+
+
+- Subscribe to those store changes.
+```
+store.subscribe(render)
+```
+
+- Invoke render() once, to render initial state.
+```
+render()
+```
+
+**How mutation works in Redux:**
+
+- Any state change is caused by a dispatch() call.
+
+- When an action is dispatched, the store calls the reducer that the action was created with,
+
+- with the current state, and the action being dispatched.
+
+- with combined reducers, state is undefined because there will be no NEW state ... yet.
+
+The CHILD reducer (the one you're invoking) will call that.
+
+- the ROOT reducer is the one the store is created with.
+
+
+I left off here: video #18
+https://egghead.io/lessons/javascript-redux-react-todo-list-example-toggling-a-todo

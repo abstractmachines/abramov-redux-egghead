@@ -73,10 +73,45 @@ const todoApp = combineReducers({
 /* ***** STORE ***** */
 const store = createStore(todoApp)
 
-// render() updates DOM in response to current app state
-render = () => {
+let nextTodoId = 0 // global. increment.
+
+// Bug? wrapped everything in div in a <form>, but that is only rendered briefly...
+// perhaps only after 2nd render cycle?
+// https://github.com/erikras/redux-form/issues/621
+class TodoApp extends Component {
+  render() {
+    return (
+      <div>
+        <input ref={node => {this.input = node}} />
+        <button onClick={() => {
+          store.dispatch({
+            type: 'ADD_TODO',
+            text: this.input.value,
+            id: nextTodoId++
+          })
+          this.input.value = ''
+        }}>
+          Add Todo
+        </button>
+        <ul>
+          {this.props.todos.map(todo =>
+            <li key={todo.id}>
+              {todo.text}
+            </li>
+          )}
+        </ul>
+      </div>
+    )
+  }
+}
+
+// render() is called on every store change. 
+// render() updates DOM in response to current app state.
+// current store state is: getState(),
+// and todos are an array that Redux gets from current state of store.
+const render = () => {
   ReactDOM.render(
-    <TodoApp />,
+    <TodoApp todos={store.getState().todos}/>,
     document.getElementById('root')
   )
 }
@@ -84,5 +119,5 @@ render = () => {
 // subscribe to those store changes
 store.subscribe(render)
 
-// once to render initial state
+// once, to render initial state
 render()
