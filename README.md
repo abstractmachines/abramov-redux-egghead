@@ -27,7 +27,7 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 
 ## [Part III: React View Layer + our Reducers](#iii)
 *Videos 17-30.*
-1. View layer: Redux React todo (video 17), how it works.
+1. View layer: Redux React todo (video 17).
 2. Rad
 3. Stuff
 
@@ -932,7 +932,7 @@ What this section will create:
 
 ![video 17](https://github.com/abstractmachines/abramov-redux-egghead/blob/master/abramov-video17.gif)
 
-- Reducers here.
+- Reducers here. Same as before.
 
 - Create Store:
 ```
@@ -947,7 +947,7 @@ let nextTodoId = 0 // global. increment.
 - Create a typical React Component class... for event handling, dispatch an action!
 
 - It's common for React components to **dispatch actions**;
-- and, to render collections with `map()`:
+- and, to **render** collections with `map()`:
 ```
 class TodoApp extends Component {
   render() {
