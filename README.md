@@ -928,6 +928,10 @@ see videos10-16.js for full code example.
 
 ### Code (and, an explanation of how it works)
 
+What this section will create:
+
+[video 17](https://github.com/abstractmachines/abramov-redux-egghead/blob/master/abramov-video17.gif)
+
 - Reducers here.
 
 - Create Store:
