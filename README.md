@@ -28,8 +28,8 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 ## [Part III: React View Layer + our Reducers](#iii)
 *Videos 17-30.*
 1. View layer: Redux React todo (video 17).
-2. Rad
-3. Stuff
+2. Toggling a todo with onClick() action dispatching (video 18)
+3. Filtering visibility (video 19)
 
 <a href='#i' id='i' class='anchor' aria-hidden='true'>Part I</a>
 # Part I: Intro to Redux; Counter App
@@ -1016,7 +1016,7 @@ The CHILD reducer (the one you're invoking) will call that.
 
 - the ROOT reducer is the one the store is created with.
 
-## Todos: toggling a todo with React + Redux
+## Todos: toggling a todo with React + Redux (video 18)
 
 Here is what this code will accomplish:
 
@@ -1031,15 +1031,22 @@ To show toggled (line-through for done), we just use the `style attribute` and
 Here's the `<li>` within our rendered React Component:
 
 ```
-<li key={todo.id}
-  onClick={() => {
-    store.dispatch({
-      type: 'TOGGLE_TODO',
-      id: todo.id
-    })
-  }}
-  style={{ textDecoration: todo.completed ? 'line-through' : 'none'}}
-  >
-  {todo.text}
-</li>
+<ul>
+  {this.props.todos.map(todo =>
+    <li key={todo.id}
+      onClick={() => {
+        store.dispatch({
+          type: 'TOGGLE_TODO',
+          id: todo.id
+        })
+      }}
+      style={{ textDecoration: todo.completed ? 'line-through' : 'none'}}
+      >
+      {todo.text}
+    </li>
+  )}
+</ul>
 ```
+
+
+## Todos: filtering visibility of todos with React + Redux (video 18)
