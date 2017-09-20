@@ -1002,7 +1002,7 @@ render()
 
 - Any state change is caused by a dispatch() call.
 
-- When an action is dispatched, the store calls the reducer that the action was created with,
+- When an action is dispatched, the store calls the reducer that the store was created with,
 
 - with the current state, and the action being dispatched.
 
