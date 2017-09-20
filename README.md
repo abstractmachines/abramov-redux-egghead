@@ -930,7 +930,7 @@ see videos10-16.js for full code example.
 
 What this section will create:
 
-[video 17](https://github.com/abstractmachines/abramov-redux-egghead/blob/master/abramov-video17.gif)
+![video 17](https://github.com/abstractmachines/abramov-redux-egghead/blob/master/abramov-video17.gif)
 
 - Reducers here.
 
