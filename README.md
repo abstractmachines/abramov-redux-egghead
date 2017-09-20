@@ -30,7 +30,7 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 1. View layer: Redux React todo (video 17).
 2. Toggling a todo with onClick() action dispatching (video 18)
 3. Finishing up Todos UI: Filtering todos visibility (video 19)
-4. All of code so far (videos 11-19) [link](#beforeextraction)
+4. All of code so far (videos 11-19) [link](#codebeforeextraction)
 
 <a href='#i' id='i' class='anchor' aria-hidden='true'>Part I</a>
 # Part I: Intro to Redux; Counter App
@@ -1236,7 +1236,7 @@ Remember that this is the "ES6 equivalent" of:
 const todos = this.props.todos
 const visibilityFilter = this.props.visibilityFilter
 ```
-
+<a href='#codebeforeextraction' id='codebeforeextraction' class='anchor' aria-hidden='true'>Code before extraction</a>
 ### All the code so far: Videos 11-19
 ```
 import {createStore, combineReducers} from 'redux'
