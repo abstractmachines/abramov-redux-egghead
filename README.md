@@ -921,7 +921,7 @@ see videos10-16.js for full code example.
 <a href='#iii' id='iii' class='anchor' aria-hidden='true'>Part III</a>
 # Part III: React View layer for our Redux Reducers
 
-## Incorporating React and ReactDOM with our reducers
+## Todos: adding React Components to our reducers  (video 17)
 - Install these with npm.
 
 - Import them.
@@ -1016,6 +1016,30 @@ The CHILD reducer (the one you're invoking) will call that.
 
 - the ROOT reducer is the one the store is created with.
 
+## Todos: toggling a todo with React + Redux
 
-I left off here: video #18
-https://egghead.io/lessons/javascript-redux-react-todo-list-example-toggling-a-todo
+Here is what this code will accomplish:
+
+![video 18](https://github.com/abstractmachines/abramov-redux-egghead/blob/master/abramov-video18-toggle.gif)
+
+To toggle, we will use `onClick` event handlers, and we will dispatch an action
+inside of that todo!
+
+To show toggled (line-through for done), we just use the `style attribute` and
+`text-decoration` property!
+
+Here's the `<li>` within our rendered React Component:
+
+```
+<li key={todo.id}
+  onClick={() => {
+    store.dispatch({
+      type: 'TOGGLE_TODO',
+      id: todo.id
+    })
+  }}
+  style={{ textDecoration: todo.completed ? 'line-through' : 'none'}}
+  >
+  {todo.text}
+</li>
+```

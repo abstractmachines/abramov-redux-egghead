@@ -95,7 +95,15 @@ class TodoApp extends Component {
         </button>
         <ul>
           {this.props.todos.map(todo =>
-            <li key={todo.id}>
+            <li key={todo.id}
+              onClick={() => {
+                store.dispatch({
+                  type: 'TOGGLE_TODO',
+                  id: todo.id
+                })
+              }}
+              style={{ textDecoration: todo.completed ? 'line-through' : 'none'}}
+              >
               {todo.text}
             </li>
           )}
@@ -105,7 +113,7 @@ class TodoApp extends Component {
   }
 }
 
-// render() is called on every store change. 
+// render() is called on every store change.
 // render() updates DOM in response to current app state.
 // current store state is: getState(),
 // and todos are an array that Redux gets from current state of store.
