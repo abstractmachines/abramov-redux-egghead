@@ -30,7 +30,7 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 1. View layer: Redux React todo (video 17).
 2. Toggling a todo with onClick() action dispatching (video 18)
 3. Finishing up Todos UI: Filtering todos visibility (video 19)
-4. All of code so far (videos 11-19) [link](#codebeforeextraction)
+4. All of code so far (videos 11-19) [link](#codebeforerefactor)
 
 ## [Part IV: After the basics](#iv)
 1. Refactoring: Extracting Presentational Components (video 20)
@@ -1245,7 +1245,7 @@ Remember that this is the "ES6 equivalent" of:
 const todos = this.props.todos
 const visibilityFilter = this.props.visibilityFilter
 ```
-<a href='#codebeforeextraction' id='codebeforeextraction' class='anchor' aria-hidden='true'>Code before extraction</a>
+<a href='#codebeforerefactor' id='codebeforerefactor' class='anchor' aria-hidden='true'>Code before refactor</a>
 ### All the code so far: Videos 11-19
 ```
 import {createStore, combineReducers} from 'redux'
@@ -1446,6 +1446,67 @@ store.subscribe(render)
 // once, to render initial state
 render()
 ```
-<a href='#iv' id='iv' class='anchor' aria-hidden='true'>Part III</a>
+
+<a href='#iv' id='iv' class='anchor' aria-hidden='true'>Part IV</a>
 ## Refactoring: Extracting Presentational Components (video 20)
 A single component approach has worked so far, but we want to build modular code that is more testable and maintainable, and has separation of responsibility and concerns.
+
+**Things we are removing to make this a Presentational (Dumb) Component:**
+
+- **key:** The component will present a single todo item, so we will remove the `key`.
+(We'll use that later when iterating over the collection.)
+
+- **onClick:** We will remove the onClick handler, and promote it to be a prop.
+
+- **Explicit props:** Instead of passing a todo object, we pass completed and text as explicit props.
+
+We add these presentational components:
+```
+// Single todo element
+// A presentational component.
+// Instead of passing a todo object, we pass completed and text as explicit props.
+const Todo = ({
+  onClick,
+  completed,
+  text
+}) => (
+  <li
+    onClick={onClick}
+    style={{textDecoration: completed ? 'line-through' : 'none'}}
+    >
+    {text}
+  </li>
+)
+
+// List of todos.
+// A presentational component.
+// Accepts array of todos, and iterates over them.
+const TodoList = ({
+  todos,
+  onTodoClick
+}) => (
+  <ul>
+    {todos.map(todo =>
+      <Todo
+        key={todo.id}
+        {...todo} // equivalent to: text={todo.text} completed={todo.completed}
+        onClick={() => onTodoClick(todo.id)}
+      />
+    )}
+  </ul>
+)
+```
+
+and now our Todoapp Component, will contain a Container (Smart) Component:
+```
+{/* TodoList Container (Smart) Component */}
+<TodoList
+  todos={visibleTodos}
+  onTodoClick={id =>
+    store.dispatch({
+      type: 'TOGGLE_TODO',
+      id
+    })
+  }
+/>
+```

@@ -122,6 +122,40 @@ const getVisibleTodos = (
   }
 }
 
+// Single todo element
+// A presentational component.
+// Instead of passing a todo object, we pass completed and text as explicit props.
+const Todo = ({
+  onClick,
+  completed,
+  text
+}) => (
+  <li
+    onClick={onClick}
+    style={{textDecoration: completed ? 'line-through' : 'none'}}
+    >
+    {text}
+  </li>
+)
+
+// List of todos.
+// A presentational component.
+// Accepts array of todos, and iterates over them.
+const TodoList = ({
+  todos,
+  onTodoClick
+}) => (
+  <ul>
+    {todos.map(todo =>
+      <Todo
+        key={todo.id}
+        {...todo} // equivalent to: text={todo.text} completed={todo.completed}
+        onClick={() => onTodoClick(todo.id)}
+      />
+    )}
+  </ul>
+)
+
 let nextTodoId = 0 // global. increment.
 
 // TODO: wrap the <input> in a <form> so both enter and click work for button submit
@@ -150,21 +184,16 @@ class TodoApp extends Component {
         }}>
           Add Todo
         </button>
-        <ul>
-          {visibleTodos.map(todo =>
-            <li key={todo.id}
-              onClick={() => {
-                store.dispatch({
-                  type: 'TOGGLE_TODO',
-                  id: todo.id
-                })
-              }}
-              style={{ textDecoration: todo.completed ? 'line-through' : 'none'}}
-              >
-              {todo.text}
-            </li>
-          )}
-        </ul>
+        {/* TodoList Container (Smart) Component */}
+        <TodoList
+          todos={visibleTodos}
+          onTodoClick={id =>
+            store.dispatch({
+              type: 'TOGGLE_TODO',
+              id
+            })
+          }
+        />
         <p> Show:
           {' '}
           <FilterLink filter='SHOW_ALL' currentFilter={visibilityFilter}>  ALL </FilterLink>
