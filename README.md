@@ -1448,7 +1448,7 @@ render()
 ```
 
 <a href='#iv' id='iv' class='anchor' aria-hidden='true'>Part IV</a>
-## Refactoring: Extracting Presentational Components (video 20)
+## Refactoring: Extracting Presentational Components: Todo, TodoList (video 20)
 A single component approach has worked so far, but we want to build modular code that is more testable and maintainable, and has separation of responsibility and concerns.
 
 **Things we are removing to make this a Presentational (Dumb) Component:**
@@ -1510,3 +1510,45 @@ and now our Todoapp Component, will contain a Container (Smart) Component:
   }
 />
 ```
+
+## Refactoring: Extracting Presentational Components: AddTodo, Footer, FilterLink (video 21)
+
+Extract input and button into separate presentational components called AddTodo. AddTodo will be a functional component (with the requisite  <AddTodo /> replacing it inside TodoApp.)
+
+Extracted Presentational (Dumb) Component: AddTodo
+```
+const AddTodo = ({
+  addTodoClick
+}) => {
+  let input // functional components = no this; declare locally; let mutate (no const)
+
+  return (
+    <div>
+      <input ref={node => {input = node}} />
+      <button onClick={() => {
+        addTodoClick(input.value)
+        input.value = ''
+      }}>
+        Add Todo
+      </button>
+    </div>
+  )
+}
+```
+
+Container (Smart) Component: AddTodo
+```
+<AddTodo
+  addTodoClick={text =>
+    {
+      store.dispatch({
+        type: 'ADD_TODO',
+        text,
+        id: nextTodoId++
+      })
+    }
+  }
+/>
+```
+
+and so on and so forth with the Footer and FilterLink:

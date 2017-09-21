@@ -156,6 +156,26 @@ const TodoList = ({
   </ul>
 )
 
+// button and input presentational component.
+// Functional component that does not accept any props.
+const AddTodo = ({
+  addTodoClick
+}) => {
+  let input // functional components = no this; declare locally; let mutate (no const)
+
+  return (
+    <div>
+      <input ref={node => {input = node}} />
+      <button onClick={() => {
+        addTodoClick(input.value)
+        input.value = ''
+      }}>
+        Add Todo
+      </button>
+    </div>
+  )
+}
+
 let nextTodoId = 0 // global. increment.
 
 // TODO: wrap the <input> in a <form> so both enter and click work for button submit
@@ -173,18 +193,19 @@ class TodoApp extends Component {
     );
     return (
       <div>
-        <input ref={node => {this.input = node}} />
-        <button onClick={() => {
-          store.dispatch({
-            type: 'ADD_TODO',
-            text: this.input.value,
-            id: nextTodoId++
-          })
-          this.input.value = ''
-        }}>
-          Add Todo
-        </button>
-        {/* TodoList Container (Smart) Component */}
+        {/* AddTodo  Container Component */}
+        <AddTodo
+          addTodoClick={text =>
+            {
+              store.dispatch({
+                type: 'ADD_TODO',
+                text,
+                id: nextTodoId++
+              })
+            }
+          }
+        />
+        {/* TodoList Container Component */}
         <TodoList
           todos={visibleTodos}
           onTodoClick={id =>
