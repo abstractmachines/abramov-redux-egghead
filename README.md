@@ -32,6 +32,10 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 3. Finishing up Todos UI: Filtering todos visibility (video 19)
 4. All of code so far (videos 11-19) [link](#codebeforeextraction)
 
+## [Part IV: After the basics](#iv)
+1. Refactoring: Extracting Presentational Components (video 20)
+
+
 <a href='#i' id='i' class='anchor' aria-hidden='true'>Part I</a>
 # Part I: Intro to Redux; Counter App
 
@@ -1050,7 +1054,7 @@ Here's the `<li>` within our rendered React Component:
 ```
 
 
-## Finishing up Todos UI: Filtering todos visibility (video 19) (video 19)
+## Finishing up Todos UI: Filtering todos visibility (video 19)
 
 We want to filter visibility of todos in categories such as :
 
@@ -1442,3 +1446,6 @@ store.subscribe(render)
 // once, to render initial state
 render()
 ```
+<a href='#iv' id='iv' class='anchor' aria-hidden='true'>Part III</a>
+## Refactoring: Extracting Presentational Components (video 20)
+A single component approach has worked so far, but we want to build modular code that is more testable and maintainable, and has separation of responsibility and concerns.
