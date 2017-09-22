@@ -671,7 +671,7 @@ return state.map(todo => {
 
 ### Reducer Composition Pattern:
 
-- Breaking reducer down into multiple functions (single r
+- Breaking reducer down into multiple functions (single responsibility principle)
 - Combine those reducers together.
 - Top level reducer calls existing "child" reducers and combines their results in a single state object.
 - State is undefined/an empty object on the top level reducer. Initial state is an empty object, so fields are undefined. Child reducers will return initial state, and populates state object for the first time.
@@ -1448,10 +1448,14 @@ render()
 ```
 
 <a href='#iv' id='iv' class='anchor' aria-hidden='true'>Part IV</a>
-## Refactoring: Extracting Presentational Components: Todo, TodoList (video 20)
+## Refactoring: Extracting Presentational Components: Todo, TodoList (videos 20, 21)
 A single component approach has worked so far, but we want to build modular code that is more testable and maintainable, and has separation of responsibility and concerns.
 
-**Things we are removing to make this a Presentational (Dumb) Component:**
+We want to separate Containers, or Smart Components, from Presentational, or
+Dumb Components. Presentational Dumb Components only care about the presentation,
+and so all the behavior should be removed from Dumb Components.
+
+**Things we will remove to make a Component a Presentational (Dumb) Component:**
 
 - **key:** The component will present a single todo item, so we will remove the `key`.
 (We'll use that later when iterating over the collection.)
@@ -1511,7 +1515,7 @@ and now our Todoapp Component, will contain a Container (Smart) Component:
 />
 ```
 
-## Refactoring: Extracting Presentational Components: AddTodo, Footer, FilterLink (video 21)
+## Refactoring: Extracting Presentational Components: AddTodo (video 21)
 
 Extract input and button into separate presentational components called AddTodo. AddTodo will be a functional component (with the requisite  <AddTodo /> replacing it inside TodoApp.)
 
@@ -1551,7 +1555,18 @@ Container (Smart) Component: AddTodo
 />
 ```
 
-and so on and so forth with the Footer and FilterLink:
+## Refactoring: Extracting Presentational Components: Footer, FilterLink (video 21)
+This one was a little different because of some of the complexity involved.
+
+Whatever we pass into Footer Component as ``{onFilterClick}`` will end up in the
+FilterLink Component as `{onClick}`.
+- The Smart Container Component `<TodoApp>` passes in `onFilterClick` as a prop to
+`<Footer>` (and dispatches an action as described above in FilterLink docs).
+- `<Footer>` receives that `onFilterClick` prop passed into it, and assigns it
+to `onClick` inside of the `<FilterLink>` component;
+- Hence, it's logical that `<FilterLink>` will receive that `onClick` prop, from
+when it was invoked inside of `<Footer>.`
+
 
 Extracted Presentational (Dumb) Components: Footer and FilterLink
 ```
@@ -1574,7 +1589,6 @@ const Footer = ({
     </div>
   )
 }
-
 
 const FilterLink = ({
   filter,
