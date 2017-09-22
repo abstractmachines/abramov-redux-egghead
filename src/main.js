@@ -73,55 +73,6 @@ const todoApp = combineReducers({
 /* ***** STORE ***** */
 const store = createStore(todoApp)
 
-/**
- * User needs to click this to switch current visible todos.
- * filter prop is just a string
- * children is the contents of the link
- * @param {Component} class [description]
- */
-const FilterLink = ({
-  filter,
-  children,
-  currentFilter
-}) => {
-  if (filter === currentFilter) {
-    return <span>{children}</span>
-  }
-  return (
-    <a href='#'
-      onClick={e => {
-        e.preventDefault();
-        store.dispatch({
-          type: 'SET_VISIBILITY_FILTER',
-          filter // pass in filter prop, so we know which filter is clicked
-        });
-      }}
-      >
-        {children} {/* text of the link */}
-      </a>
-  );
-};
-
-// Switch current filter value.
-// Returns array of visible todo's.
-const getVisibleTodos = (
-  todos,
-  filter
-) => {
-  switch(filter) {
-    case 'SHOW_ALL':
-      return todos;
-    case 'SHOW_COMPLETED':
-      return todos.filter(
-        t => t.completed
-      );
-    case 'SHOW_ACTIVE':
-      return todos.filter(
-        t => !t.completed
-      );
-  }
-}
-
 // Single todo element
 // A presentational component.
 // Instead of passing a todo object, we pass completed and text as explicit props.
@@ -176,6 +127,73 @@ const AddTodo = ({
   )
 }
 
+// Switch current filter value.
+// Returns array of visible todo's.
+const getVisibleTodos = (
+  todos,
+  filter
+) => {
+  switch(filter) {
+    case 'SHOW_ALL':
+      return todos;
+    case 'SHOW_COMPLETED':
+      return todos.filter(
+        t => t.completed
+      );
+    case 'SHOW_ACTIVE':
+      return todos.filter(
+        t => !t.completed
+      );
+  }
+}
+
+/**
+ * User needs to click this to switch current visible todos.
+ * filter prop is just a string
+ * children is the contents of the link
+ * @param {Component} class [description]
+ */
+const FilterLink = ({
+  filter,
+  children,
+  currentFilter,
+  onClick
+}) => {
+  if (filter === currentFilter) {
+    return <span>{children}</span>
+  }
+  return (
+    <a href='#'
+      onClick={e => {
+        e.preventDefault();
+        onClick(filter);
+      }}
+      >
+        {children} {/* text of the link */}
+      </a>
+  );
+};
+
+// whatever we pass into Footer Component as {onFilterClick} will end up in the
+// FilterLink Component as {onClick}.
+const Footer = ({
+  visibilityFilter,
+  onFilterClick
+}) => {
+  return (
+    <div>
+      <p> Show:
+        {' '}
+        <FilterLink filter='SHOW_ALL' onClick={onFilterClick} currentFilter={visibilityFilter}>  ALL </FilterLink>
+        {' '}
+        <FilterLink filter='SHOW_ACTIVE' onClick={onFilterClick} currentFilter={visibilityFilter}>  ACTIVE </FilterLink>
+        {' '}
+        <FilterLink filter='SHOW_COMPLETED' onClick={onFilterClick} currentFilter={visibilityFilter}>  COMPLETED </FilterLink>
+      </p>
+    </div>
+  )
+}
+
 let nextTodoId = 0 // global. increment.
 
 // TODO: wrap the <input> in a <form> so both enter and click work for button submit
@@ -215,14 +233,15 @@ class TodoApp extends Component {
             })
           }
         />
-        <p> Show:
-          {' '}
-          <FilterLink filter='SHOW_ALL' currentFilter={visibilityFilter}>  ALL </FilterLink>
-          {' '}
-          <FilterLink filter='SHOW_ACTIVE' currentFilter={visibilityFilter}>  ACTIVE </FilterLink>
-          {' '}
-          <FilterLink filter='SHOW_COMPLETED' currentFilter={visibilityFilter}>  COMPLETED </FilterLink>
-        </p>
+        {/* Footer Container Component */}
+        <Footer visibilityFilter={visibilityFilter}
+          onFilterClick={filter =>
+            store.dispatch({
+              type: 'SET_VISIBILITY_FILTER',
+              filter
+            })
+          }
+        />
       </div>
     )
   }

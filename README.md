@@ -1552,3 +1552,60 @@ Container (Smart) Component: AddTodo
 ```
 
 and so on and so forth with the Footer and FilterLink:
+
+```
+// whatever we pass into Footer Component as {onFilterClick} will end up in the
+// FilterLink Component as {onClick}.
+const Footer = ({
+  visibilityFilter,
+  onFilterClick
+}) => {
+  return (
+    <div>
+      <p> Show:
+        {' '}
+        <FilterLink filter='SHOW_ALL' onClick={onFilterClick} currentFilter={visibilityFilter}>  ALL </FilterLink>
+        {' '}
+        <FilterLink filter='SHOW_ACTIVE' onClick={onFilterClick} currentFilter={visibilityFilter}>  ACTIVE </FilterLink>
+        {' '}
+        <FilterLink filter='SHOW_COMPLETED' onClick={onFilterClick} currentFilter={visibilityFilter}>  COMPLETED </FilterLink>
+      </p>
+    </div>
+  )
+}
+```
+
+```
+const FilterLink = ({
+  filter,
+  children,
+  currentFilter,
+  onClick
+}) => {
+  if (filter === currentFilter) {
+    return <span>{children}</span>
+  }
+  return (
+    <a href='#'
+      onClick={e => {
+        e.preventDefault();
+        onClick(filter);
+      }}
+      >
+        {children} {/* text of the link */}
+      </a>
+  );
+};
+```
+
+```
+{/* Footer Container Component */}
+<Footer visibilityFilter={visibilityFilter}
+  onFilterClick={filter =>
+    store.dispatch({
+      type: 'SET_VISIBILITY_FILTER',
+      filter
+    })
+  }
+/>
+```
