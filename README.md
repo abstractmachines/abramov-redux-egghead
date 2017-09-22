@@ -1553,6 +1553,7 @@ Container (Smart) Component: AddTodo
 
 and so on and so forth with the Footer and FilterLink:
 
+Extracted Presentational (Dumb) Components: Footer and FilterLink
 ```
 // whatever we pass into Footer Component as {onFilterClick} will end up in the
 // FilterLink Component as {onClick}.
@@ -1573,9 +1574,8 @@ const Footer = ({
     </div>
   )
 }
-```
 
-```
+
 const FilterLink = ({
   filter,
   children,
@@ -1597,7 +1597,7 @@ const FilterLink = ({
   );
 };
 ```
-
+Container (Smart) Component: Footer
 ```
 {/* Footer Container Component */}
 <Footer visibilityFilter={visibilityFilter}
