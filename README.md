@@ -1623,3 +1623,10 @@ Container (Smart) Component: Footer
   }
 />
 ```
+
+## Refactoring: Converting TodoApp into a function (video 21)
+This should be done whenever possible.
+
+- Instead of declaring the props inside the render method, do it in the argument.
+- Hence, you can remove the props destructuring.
+- Remove the render() method declaration.

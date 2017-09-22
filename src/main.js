@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import expect from 'expect'
 import deepFreeze from 'deep-freeze'
 
-// TODO app, videos 11-30
+let nextTodoId = 0
 
 // REDUCER: todo
 // `state` refers to individual todo, instead of list of todo's.
@@ -63,14 +63,13 @@ const visibilityFilter = (
   }
 }
 
-// Top Level Reducer "Root Reducer"
-// see todoApp top level reducer in README
+// Top Level Reducer / Root Reducer
 const todoApp = combineReducers({
   todos,
   visibilityFilter
 })
 
-/* ***** STORE ***** */
+// STORE
 const store = createStore(todoApp)
 
 // Single todo element
@@ -112,7 +111,7 @@ const TodoList = ({
 const AddTodo = ({
   addTodoClick
 }) => {
-  let input // functional components = no this; declare locally; let mutate (no const)
+  let input // functional components = no this; declare locally; let mutate
 
   return (
     <div>
@@ -127,8 +126,7 @@ const AddTodo = ({
   )
 }
 
-// Switch current filter value.
-// Returns array of visible todo's.
+// Switch current filter value. Returns array of visible todo's.
 const getVisibleTodos = (
   todos,
   filter
@@ -147,12 +145,8 @@ const getVisibleTodos = (
   }
 }
 
-/**
- * User needs to click this to switch current visible todos.
- * filter prop is just a string
- * children is the contents of the link
- * @param {Component} class [description]
- */
+// User needs to click this to switch current visible todos.
+// Children is the contents of the link.
 const FilterLink = ({
   filter,
   children,
@@ -169,12 +163,12 @@ const FilterLink = ({
         onClick(filter);
       }}
       >
-        {children} {/* text of the link */}
+        {children}
       </a>
   );
 };
 
-// whatever we pass into Footer Component as {onFilterClick} will end up in the
+// Whatever we pass into Footer Component as {onFilterClick} will end up in the
 // FilterLink Component as {onClick}.
 const Footer = ({
   visibilityFilter,
@@ -194,10 +188,6 @@ const Footer = ({
   )
 }
 
-let nextTodoId = 0 // global. increment.
-
-// TODO: wrap the <input> in a <form> so both enter and click work for button submit
-//  This was causing some rendering issues in React.
 class TodoApp extends Component {
   render() {
     const {
