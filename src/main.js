@@ -69,8 +69,6 @@ const todoApp = combineReducers({
   visibilityFilter
 })
 
-// STORE
-const store = createStore(todoApp)
 
 // Presentational.
 const Todo = ({
@@ -245,7 +243,11 @@ const Footer = () => {
   )
 }
 
-const TodoApp = () => (
+// STORE
+const store = createStore(todoApp)
+
+//
+const TodoApp = ({ store }) => (
   <div>
     <AddTodo />
     <VisibleTodoList />
