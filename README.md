@@ -1630,3 +1630,21 @@ This should be done whenever possible.
 - Instead of declaring the props inside the render method, do it in the argument.
 - Hence, you can remove the props destructuring.
 - Remove the render() method declaration.
+
+# TODO: Videos 20-21 are refactoring; but videos 22/23 revert much of that code.
+
+in video 22, much of this work is redone.
+- Encapsulation
+
+- Lifecycle methods in container components
+
+- <Link />
+- <Footer />
+- <FilterLink /> container component with lifecycle methods
+- <VisibleTodos /> container component with lifecycle methods
+
+- changing as many classes as possible to Functional Components
+
+- removing many of the calls to render() (which update the entire app in response
+  to state changes), and replacing that with lifecycle methods invoked from
+  within components (hence saving on performance by updating those components independently)
