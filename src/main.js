@@ -141,18 +141,19 @@ class VisibleTodoList extends Component {
   }
 }
 
-// button and input presentational component.
-// Functional component that does not accept any props.
-const AddTodo = ({
-  addTodoClick
-}) => {
+// Container.
+const AddTodo = () => {
   let input // functional components = no this; declare locally; let mutate
 
   return (
     <div>
       <input ref={node => {input = node}} />
       <button onClick={() => {
-        addTodoClick(input.value)
+            store.dispatch({
+              type: 'ADD_TODO',
+              id: nextTodoId++,
+              text: input.value,
+            })
         input.value = ''
       }}>
         Add Todo
@@ -276,18 +277,7 @@ class TodoApp extends Component {
     );
     return (
       <div>
-        {/* AddTodo  Container Component */}
-        <AddTodo
-          addTodoClick={text =>
-            {
-              store.dispatch({
-                type: 'ADD_TODO',
-                text,
-                id: nextTodoId++
-              })
-            }
-          }
-        />
+        <AddTodo />
         <VisibleTodoList />
         {/* Footer Container Component */}
         <Footer
