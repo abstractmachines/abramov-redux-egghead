@@ -145,15 +145,13 @@ const getVisibleTodos = (
   }
 }
 
-// User needs to click this to switch current visible todos.
-// Children is the contents of the link.
-const FilterLink = ({
-  filter,
+// Presentational
+const Link = ({
+  active,
   children,
-  currentFilter,
   onClick
 }) => {
-  if (filter === currentFilter) {
+  if (active) {
     return <span>{children}</span>
   }
   return (
@@ -168,21 +166,64 @@ const FilterLink = ({
   );
 };
 
+// Container
+class FilterLink extends Component {
+  componentDidMount() {
+    this.unsubscribe = store.subscribe(() =>
+      this.forceUpdate()
+    );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  render() {
+    const props = this.props;
+    const state = store.getState();
+
+    return (
+      <Link
+        active={
+          props.filter ===
+          state.visibilityFilter
+        }
+        onClick={() =>
+          store.dispatch({
+            type: 'SET_VISIBILITY_FILTER',
+            filter: props.filter
+          })
+        }
+      >
+        {props.children}
+      </Link>
+    );
+  }
+}
+
 // Whatever we pass into Footer Component as {onFilterClick} will end up in the
 // FilterLink Component as {onClick}.
-const Footer = ({
-  visibilityFilter,
-  onFilterClick
-}) => {
+const Footer = (
+//   {
+//   visibilityFilter,
+//   onFilterClick
+// }
+) => {
   return (
     <div>
       <p> Show:
         {' '}
-        <FilterLink filter='SHOW_ALL' onClick={onFilterClick} currentFilter={visibilityFilter}>  ALL </FilterLink>
+        <FilterLink filter='SHOW_ALL'
+          // onClick={onFilterClick} currentFilter={visibilityFilter}
+          >  ALL </FilterLink>
         {' '}
-        <FilterLink filter='SHOW_ACTIVE' onClick={onFilterClick} currentFilter={visibilityFilter}>  ACTIVE </FilterLink>
+        <FilterLink filter='SHOW_ACTIVE'
+          // onClick={onFilterClick} currentFilter={visibilityFilter}
+          >  ACTIVE </FilterLink>
         {' '}
-        <FilterLink filter='SHOW_COMPLETED' onClick={onFilterClick} currentFilter={visibilityFilter}>  COMPLETED </FilterLink>
+        <FilterLink filter='SHOW_COMPLETED'
+          //  onClick={onFilterClick} currentFilter={visibilityFilter}
+           >  COMPLETED </FilterLink>
       </p>
     </div>
   )
@@ -224,13 +265,14 @@ class TodoApp extends Component {
           }
         />
         {/* Footer Container Component */}
-        <Footer visibilityFilter={visibilityFilter}
-          onFilterClick={filter =>
-            store.dispatch({
-              type: 'SET_VISIBILITY_FILTER',
-              filter
-            })
-          }
+        <Footer
+          // visibilityFilter={visibilityFilter}
+          // onFilterClick={filter =>
+          //   store.dispatch({
+          //     type: 'SET_VISIBILITY_FILTER',
+          //     filter
+          //   })
+          // }
         />
       </div>
     )
@@ -241,6 +283,7 @@ class TodoApp extends Component {
 // - render() updates DOM in response to current app state.
 // - current store state is: getState(), so any props passed in are from that state,
 //  i.e. propName={store.getState().propName}
+//
 const render = () => {
   ReactDOM.render(
     <TodoApp
