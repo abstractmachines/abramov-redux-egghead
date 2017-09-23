@@ -1908,3 +1908,31 @@ render()
 ```
 
 ## Code after videos 22:
+
+At this point after extracting components and toying with the code, and getting
+the code to work at the end of every video, things broken down a bit.
+
+The discussion on the [tutorial page here](https://egghead.io/lessons/javascript-redux-extracting-container-components-filterlink) indicates that:
+
+>>> "This tutorial is just an approximation of how connect() from React Redux works.
+Please watch series to the end, which is where we start using it and remove the “wrong” code.""
+
+and
+
+>>> "The FilterLink component in this lesson is not following the rules in React.
+This error is removed in later chapters and is not the way things are done in Redux,
+so it is just confusing. [the error is] render() depends on something else than
+this.state or this.props which is simply illegal in React."
+
+>>> "The contract of a a react component is that the result returned from render
+should only depend on this.state and this.props and nothing else."
+[React Component Spec](https://facebook.github.io/react/docs/react-component.html)
+- **"The proper way to do this is to use this.state instead. This is done by reading the value from store.getState() in the subscribe listener and call this.setState() of the component."**
+
+... So .... that's why the code doesn't really work here in video 22.
+The error is:
+
+>>> filter is not defined
+    at onClick (main.js?
+
+>>>>>>>>>>>>>>>>>>>>>>>>
