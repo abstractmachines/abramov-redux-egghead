@@ -264,48 +264,16 @@ const Footer = (
   )
 }
 
-class TodoApp extends Component {
-  render() {
+const TodoApp = () => (
+  <div>
+    <AddTodo />
+    <VisibleTodoList />
+    <Footer />
+  </div>
+)
 
-    // filter todos before rendering them:
-    const visibleTodos = getVisibleTodos(
-      todos,
-      visibilityFilter
-    );
-    return (
-      <div>
-        <AddTodo />
-        <VisibleTodoList />
-        {/* Footer Container Component */}
-        <Footer
-          // visibilityFilter={visibilityFilter}
-          // onFilterClick={filter =>
-          //   store.dispatch({
-          //     type: 'SET_VISIBILITY_FILTER',
-          //     filter
-          //   })
-          // }
-        />
-      </div>
-    )
-  }
-}
-
-// - render() is called on every store change.
-// - render() updates DOM in response to current app state.
-// - current store state is: getState(), so any props passed in are from that state,
-//  i.e. propName={store.getState().propName}
-//
-const render = () => {
-  ReactDOM.render(
-    <TodoApp
-    {...store.getState()}/>,
-    document.getElementById('root')
-  )
-}
-
-// subscribe to those store changes
-store.subscribe(render)
-
-// once, to render initial state
-render()
+ReactDOM.render(
+  <TodoApp
+  {...store.getState()}/>,
+  document.getElementById('root')
+)
