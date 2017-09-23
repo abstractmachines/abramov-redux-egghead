@@ -1632,7 +1632,7 @@ This should be done whenever possible.
 - Remove the render() method declaration.
 
 ## Videos 22/23 revert much of the refactoring code in vids 20-21
-The code above was functional, but in video 22, much of this work is redone.
+Videos 20-21 involved "hacks" used to explain the functionality of `connect()`.
 
 The code below will have the following improvements.
 

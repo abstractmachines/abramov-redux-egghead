@@ -6,9 +6,9 @@ import deepFreeze from 'deep-freeze'
 
 let nextTodoId = 0
 
-// REDUCER: todo
-// `state` refers to individual todo, instead of list of todo's.
-// Creating and updating a todo in response to an action:
+// REDUCER
+// `state` refers to individual todo.
+// Creates, updates todo in response to an action.
 const todo = (state, action) => {
   switch(action.type) {
     case 'ADD_TODO':
@@ -22,7 +22,7 @@ const todo = (state, action) => {
         return state;
       }
       return {
-        ...state, // Object spread operator
+        ...state,
         completed: !state.completed
       };
     default:
@@ -30,10 +30,9 @@ const todo = (state, action) => {
   }
 }
 
-// REDUCER: todos
-// `state` refers to list of todos
+// REDUCER
+// `state` refers to list of todos.
 const todos = (state = [], action) => {
-  // action type is a string. when it matches, returns...
   switch(action.type) {
     case 'ADD_TODO':
     return [
@@ -48,8 +47,8 @@ const todos = (state = [], action) => {
   }
 };
 
-// - Top level REDUCER: visibilityFilter
-// - Returns `action.filter` as next state value for the visibility reducer
+// REDUCER
+// - Returns `action.filter` as next state value for the visibility reducer,
 //  IF action param is SET_VISIBILITY_FILTER. ELSE, returns current state.
 const visibilityFilter = (
   state = 'SHOW_ALL',
@@ -63,6 +62,7 @@ const visibilityFilter = (
   }
 }
 
+// REDUCER
 // Top Level Reducer / Root Reducer
 const todoApp = combineReducers({
   todos,
@@ -72,9 +72,7 @@ const todoApp = combineReducers({
 // STORE
 const store = createStore(todoApp)
 
-// Single todo element
-// A presentational component.
-// Instead of passing a todo object, we pass completed and text as explicit props.
+// Presentational.
 const Todo = ({
   onClick,
   completed,
@@ -89,8 +87,6 @@ const Todo = ({
 )
 
 // Presentational.
-// List of todos.
-// Accepts array of todos, and iterates over them.
 const TodoList = ({
   todos,
   onTodoClick
@@ -143,7 +139,7 @@ class VisibleTodoList extends Component {
 
 // Container.
 const AddTodo = () => {
-  let input // functional components = no this; declare locally; let mutate
+  let input
 
   return (
     <div>
@@ -181,7 +177,7 @@ const getVisibleTodos = (
   }
 }
 
-// Presentational
+// Presentational.
 const Link = ({
   active,
   children,
@@ -202,7 +198,7 @@ const Link = ({
   );
 };
 
-// CoTodontainer
+// Container.
 class FilterLink extends Component {
   componentDidMount() {
     this.unsubscribe = store.subscribe(() =>
@@ -236,29 +232,14 @@ class FilterLink extends Component {
   }
 }
 
-// Whatever we pass into Footer Component as {onFilterClick} will end up in the
-// FilterLink Component as {onClick}.
-const Footer = (
-//   {
-//   visibilityFilter,
-//   onFilterClick
-// }
-) => {
+// Presentational.
+const Footer = () => {
   return (
     <div>
       <p> Show:
-        {' '}
-        <FilterLink filter='SHOW_ALL'
-          // onClick={onFilterClick} currentFilter={visibilityFilter}
-          >  ALL </FilterLink>
-        {' '}
-        <FilterLink filter='SHOW_ACTIVE'
-          // onClick={onFilterClick} currentFilter={visibilityFilter}
-          >  ACTIVE </FilterLink>
-        {' '}
-        <FilterLink filter='SHOW_COMPLETED'
-          //  onClick={onFilterClick} currentFilter={visibilityFilter}
-           >  COMPLETED </FilterLink>
+        {' '} <FilterLink filter='SHOW_ALL'>  ALL </FilterLink>
+        {' '} <FilterLink filter='SHOW_ACTIVE'>  ACTIVE </FilterLink>
+        {' '} <FilterLink filter='SHOW_COMPLETED'>  COMPLETED </FilterLink>
       </p>
     </div>
   )
