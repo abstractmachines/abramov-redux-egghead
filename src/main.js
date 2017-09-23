@@ -266,10 +266,7 @@ const Footer = (
 
 class TodoApp extends Component {
   render() {
-    const {
-      todos,
-      visibilityFilter
-    } = this.props
+
     // filter todos before rendering them:
     const visibleTodos = getVisibleTodos(
       todos,
