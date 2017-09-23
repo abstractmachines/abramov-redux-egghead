@@ -1910,7 +1910,7 @@ render()
 ## Code after videos 22:
 
 At this point after extracting components and toying with the code, and getting
-the code to work at the end of every video, things broken down a bit.
+the code to work at the end of every video, things broke down a bit.
 
 The discussion on the [tutorial page here](https://egghead.io/lessons/javascript-redux-extracting-container-components-filterlink) indicates that:
 
@@ -1935,4 +1935,4 @@ The error is:
 >>> filter is not defined
     at onClick (main.js?
 
->>>>>>>>>>>>>>>>>>>>>>>>
+>>> "This hack is going away in the next lessons."

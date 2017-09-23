@@ -88,8 +88,8 @@ const Todo = ({
   </li>
 )
 
+// Presentational.
 // List of todos.
-// A presentational component.
 // Accepts array of todos, and iterates over them.
 const TodoList = ({
   todos,
@@ -105,6 +105,41 @@ const TodoList = ({
     )}
   </ul>
 )
+
+// Container.
+// Connects TodoList to the Redux store.
+class VisibleTodoList extends Component {
+  componentDidMount() {
+    this.unsubscribe = store.subscribe(() =>
+      this.forceUpdate()
+    );
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  render () {
+    const props = this.props
+    const state = store.getState()
+
+    return (
+      <TodoList
+        todos={
+          getVisibleTodos(
+            state.todos,
+            state.visibilityFilter
+          )
+        }
+        onTodoClick={id =>
+          store.subscribe({
+            type: 'TOGGLE_TODO',
+            id
+          })
+        }
+      />
+    )
+  }
+}
 
 // button and input presentational component.
 // Functional component that does not accept any props.
@@ -166,14 +201,13 @@ const Link = ({
   );
 };
 
-// Container
+// CoTodontainer
 class FilterLink extends Component {
   componentDidMount() {
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     );
   }
-
   componentWillUnmount() {
     this.unsubscribe();
   }
@@ -254,16 +288,7 @@ class TodoApp extends Component {
             }
           }
         />
-        {/* TodoList Container Component */}
-        <TodoList
-          todos={visibleTodos}
-          onTodoClick={id =>
-            store.dispatch({
-              type: 'TOGGLE_TODO',
-              id
-            })
-          }
-        />
+        <VisibleTodoList />
         {/* Footer Container Component */}
         <Footer
           // visibilityFilter={visibilityFilter}
