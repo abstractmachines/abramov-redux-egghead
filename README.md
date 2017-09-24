@@ -1675,3 +1675,19 @@ That isn't how a real Redux app works; instead, we would use `connect().`
 ### Improvements: store and testability
 Rather than creating a new instance of store, we may want to test with a mock store
 Give Component needs a reference to the store; pass store into TodoApp props.
+
+```
+const TodoApp = ({ store }) => (
+  <div>
+    <AddTodo />
+    <VisibleTodoList />
+    <Footer />
+  </div>
+)
+
+ReactDOM.render(
+  <TodoApp
+  store={createStore(todoApp)}/>,
+  document.getElementById('root')
+)
+```

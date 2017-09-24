@@ -243,7 +243,7 @@ const Footer = () => {
   )
 }
 
-const TodoApp = ({ store = createStore(todoApp) }) => (
+const TodoApp = ({ store }) => (
   <div>
     <AddTodo />
     <VisibleTodoList />
@@ -253,6 +253,6 @@ const TodoApp = ({ store = createStore(todoApp) }) => (
 
 ReactDOM.render(
   <TodoApp
-  {...store.getState()}/>,
+  store={createStore(todoApp)}/>,
   document.getElementById('root')
 )
