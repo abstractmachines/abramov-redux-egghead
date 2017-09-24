@@ -243,11 +243,7 @@ const Footer = () => {
   )
 }
 
-// STORE
-const store = createStore(todoApp)
-
-//
-const TodoApp = ({ store }) => (
+const TodoApp = ({ store = createStore(todoApp) }) => (
   <div>
     <AddTodo />
     <VisibleTodoList />
