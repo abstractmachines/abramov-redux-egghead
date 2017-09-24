@@ -33,8 +33,14 @@ These are my notes, paraphrasing what I've learned from watching [this video ser
 4. All of code so far (videos 11-19) [link](#codebeforerefactor)
 
 ## [Part IV: After the basics](#iv)
-1. Refactoring: Extracting Presentational Components (video 20)
-
+1. Refactoring: Extracting Presentational Components,
+Converting Class Components to Functional Components (video 2-21)
+2. Reverting video 20-21 code; using connect() and lifecycle methods (video 22-23)
+3. Passing Store Explicitly Through Props (video 24)
+4. Passing the Store Down Implicitly via Context (video 25)
+5. Provider in React Redux imports Context ! (video 26)
+6. Generating Containers with connect() from React Redux (video 27-28)
+7.
 
 <a href='#i' id='i' class='anchor' aria-hidden='true'>Part I</a>
 # Part I: Intro to Redux; Counter App
@@ -1852,7 +1858,7 @@ we pass it implicitly via context.
 - don't
 
 
-## Provider in React Redux (video 26)
+## Provider in React Redux imports Context ! (video 26)
 The code we've written for Provider is included in lib called `react-redux`.
 
 ```
@@ -1876,7 +1882,7 @@ Provider.childContextTypes = {
 }
 ```
 
-## Generating Containers with connect() from React Redux (video 27)
+## Generating Containers with connect() from React Redux (video 27-28)
 
 ## Containers need to:
 - Re-render when store state changes
