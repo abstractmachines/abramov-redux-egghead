@@ -2016,9 +2016,6 @@ In this case, we saved on 40 lines of boilerplate.
 
 >>> how to inject dispatch() as a prop into a React component by using connect() from React Redux library.
 
-
-
-
 ..............................
 
 ## A note about unsubscribe() in lifecycle TODO
