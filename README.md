@@ -257,10 +257,10 @@ const counter = (state = 0, action) => {
   }
 }
 
-/** Since change is stored in Redux store, Counter component can be a
+/** Since change is stored in Redux store, Counter Component can be a
 * simple function (stateless, too).
-* @param props, which are defined as callbacks in this dumb component
-* @return Props, bound to the event handlers of this component.
+* @param props, which are defined as callbacks in this dumb Component
+* @return Props, bound to the event handlers of this Component.
 * Recall that all adjacent JSX elements must be wrapped in enclosing DIV tag.
 */
 const Counter = ({
@@ -279,7 +279,7 @@ const Counter = ({
 const store = createStore(counter);
 
 /** Render is called anytime store state changes, so I can pass current
-* state of store as a prop to root component.
+* state of store as a prop to root Component.
 * Dispatch actions as props in the rendered Component.
 * Pass callbacks that call store.dispatch with appropriate actions.
 * @return Dispatch actions get specified here for the callbacks
@@ -951,7 +951,7 @@ let nextTodoId = 0 // global. increment.
 
 - Create a typical React Component class... for event handling, dispatch an action!
 
-- It's common for React components to **dispatch actions**;
+- It's common for React Components to **dispatch actions**;
 - and, to **render** collections with `map()`:
 ```
 class TodoApp extends Component {
@@ -1111,7 +1111,7 @@ const FilterLink = ({
 };
 ```
 
-- It passes filter, which is a prop, to the link component, so every one of
+- It passes filter, which is a prop, to the link Component, so every one of
 those 3 links is going to have a different filter prop.
 ```
 <p> Show:
@@ -1449,7 +1449,7 @@ render()
 
 <a href='#iv' id='iv' class='anchor' aria-hidden='true'>Part IV</a>
 ## Refactoring: Extracting Presentational Components: Todo, TodoList (videos 20, 21)
-A single component approach has worked so far, but we want to build modular code that is more testable and maintainable, and has separation of responsibility and concerns.
+A single Component approach has worked so far, but we want to build modular code that is more testable and maintainable, and has separation of responsibility and concerns.
 
 We want to separate Containers, or Smart Components, from Presentational, or
 Dumb Components. Presentational Dumb Components only care about the presentation,
@@ -1457,17 +1457,17 @@ and so all the behavior should be removed from Dumb Components.
 
 **Things we will remove to make a Component a Presentational (Dumb) Component:**
 
-- **key:** The component will present a single todo item, so we will remove the `key`.
+- **key:** The Component will present a single todo item, so we will remove the `key`.
 (We'll use that later when iterating over the collection.)
 
 - **onClick:** We will remove the onClick handler, and promote it to be a prop.
 
 - **Explicit props:** Instead of passing a todo object, we pass completed and text as explicit props.
 
-We add these presentational components:
+We add these Presentational Components:
 ```
 // Single todo element
-// A presentational component.
+// A Presentational Component.
 // Instead of passing a todo object, we pass completed and text as explicit props.
 const Todo = ({
   onClick,
@@ -1483,7 +1483,7 @@ const Todo = ({
 )
 
 // List of todos.
-// A presentational component.
+// A Presentational Component.
 // Accepts array of todos, and iterates over them.
 const TodoList = ({
   todos,
@@ -1517,14 +1517,14 @@ and now our Todoapp Component, will contain a Container (Smart) Component:
 
 ## Refactoring: Extracting Presentational Components: AddTodo (video 21)
 
-Extract input and button into separate presentational components called AddTodo. AddTodo will be a functional component (with the requisite  <AddTodo /> replacing it inside TodoApp.)
+Extract input and button into separate presentational Components called AddTodo. AddTodo will be a functional Component (with the requisite  <AddTodo /> replacing it inside TodoApp.)
 
 Extracted Presentational (Dumb) Component: AddTodo
 ```
 const AddTodo = ({
   addTodoClick
 }) => {
-  let input // functional components = no this; declare locally; let mutate (no const)
+  let input // functional Components = no this; declare locally; let mutate (no const)
 
   return (
     <div>
@@ -1563,7 +1563,7 @@ FilterLink Component as `{onClick}`.
 - The Smart Container Component `<TodoApp>` passes in `onFilterClick` as a prop to
 `<Footer>` (and dispatches an action as described above in FilterLink docs).
 - `<Footer>` receives that `onFilterClick` prop passed into it, and assigns it
-to `onClick` inside of the `<FilterLink>` component;
+to `onClick` inside of the `<FilterLink>` Component;
 - Hence, it's logical that `<FilterLink>` will receive that `onClick` prop, from
 when it was invoked inside of `<Footer>.`
 
@@ -1637,11 +1637,11 @@ Videos 20-21 involved "hacks" used to explain the functionality of `connect()`.
 The code below will have the following improvements.
 
 ### Encapsulation:
-The parent components won't need to know so much about data/stuff children components need.
+The Parent Components won't need to know so much about data/stuff children Components need.
 
 ### More efficient subscriptions/updates to store changes:
 
-#### Use lifecycle methods in each component:
+#### Use lifecycle methods in each Component:
 Render() re-renders entire app on store changes, and is expensive, non-ideal.
 
 ### Change as many classes as possible to Functional Components
@@ -1727,3 +1727,116 @@ const state = store.getState()
 in Footer, because FilterLink needs the store.
 
 #### Each Container Component reads the store instance through the props
+
+## Passing the Store Down Implicitly via Props (video 25)
+Container Components need to subscribe to the store changes.
+
+Let's use the advanced React feature called `context.`
+
+1. Create a Parent Component that invokes `getChildContext()`:
+```
+class Provider extends Component {
+  getChildContext() {
+    return {
+      store: this.props.store
+    }
+  }
+    render() {
+      return this.props.children
+    }
+}
+```
+
+2. Add `childContextTypes` to pass context to any Component nested in it (children, grandchildren; all descendents):
+```
+Provider.childContextTypes = {
+  store: React.PropTypes.object
+}
+```
+
+3. Create relationships:
+```
+
+ReactDOM.render(
+  <Provider store={createStore(todoApp)}>
+    <TodoApp />
+  </Provider>
+  document.getElementById('root')
+)
+```
+
+4. Create Child Component:
+```
+// for ES6 classes, change `store` to `this.context`:
+
+class FilterLink extends Component {
+  ... ...
+  const { store } = this.context
+  ... ...
+}
+
+// for Functional Components, previously looking like:
+
+const AddTodo ({ store }) => {
+  ... ...
+}
+
+// ... add a props argument as 1st arg, and context as 2nd:
+
+const AddTodo (props, { store }) => { // ES6 destructuring: { store } is equivalent to context.store
+  ... ... store.dispatch
+}
+```
+
+5. ContextTypes: use on child/descendent Components (nested in Provider); passes store in.
+```
+VisibleTodoList.contextTypes = {
+  store: React.PropTypes.object
+}
+```
+
+- **It is not necessary to add `contextTypes` to all descendents.**
+- **Just the ones directly using `context`.**
+
+6. You've now added `context` to the app in order to implicitly pass store to components.
+The final step is to remove explicit setting of store instance props.
+
+You'll take code like:
+```
+const Footer = ({ store }) => {
+  ...
+<FilterLink filter='SHOW_ALL' store={store}>  ALL </FilterLink>
+```
+
+to:
+```
+const Footer = () => {
+  ...
+<FilterLink filter='SHOW_ALL'>  ALL </FilterLink>
+```
+
+
+and:
+```
+const TodoApp = ({ store }) => (
+  <div>
+    <AddTodo store={store}/>
+    <VisibleTodoList store={store}/>
+    <Footer store={store}/>
+  </div>
+)
+```
+
+to:
+```
+const TodoApp = () => (
+  <div>
+    <AddTodo />
+    <VisibleTodoList />
+    <Footer />
+  </div>
+)
+```
+
+7. Great! Now, instead of explicitly passing the store down through props,
+we pass it implicitly via context.
