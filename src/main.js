@@ -128,7 +128,7 @@ class VisibleTodoList extends Component {
           )
         }
         onTodoClick={id =>
-          store.subscribe({
+          store.dispatch({
             type: 'TOGGLE_TODO',
             id
           })
