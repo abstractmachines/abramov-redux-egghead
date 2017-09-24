@@ -1841,6 +1841,39 @@ const TodoApp = () => (
 7. Great! Now, instead of explicitly passing the store down through props,
 we pass it implicitly via context.
 
+
+8. Context: powerful, but:
+- it conflicts with React's explicit data flow philosophy.
+- allows for (evil) global variables across tree; can necessitate dependency injection
+- don't
+
+
+## Provider in React Redux
+The code we've written for Provider is included in lib called `react-redux`.
+
+```
+import { Provider } from 'react-redux'
+```
+
+Then remove this code:
+```
+class Provider extends Component {
+  getChildContext() {
+    return {
+      store: this.props.store
+    }
+  }
+    render() {
+      return this.props.children
+    }
+}
+Provider.childContextTypes = {
+  store: React.PropTypes.object
+}
+```
+
+..............................
+
 TODO
 ## ???? ? ? ? unsubscribe in lifecycle TODO
 
