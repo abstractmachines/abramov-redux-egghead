@@ -1874,11 +1874,10 @@ Provider.childContextTypes = {
 
 ..............................
 
-TODO
-## ???? ? ? ? unsubscribe in lifecycle TODO
+## A note about unsubscribe() in lifecycle TODO
 
 This pattern looks like use of a function you fire in the destructor. As covered in
-videos prior, `unsubscribe()` isn't available. You could use anything.
+videos prior, `unsubscribe()` isn't available. You could use anything:
 ```
 componentDidMount() {
   const { store } = this.context
@@ -1890,19 +1889,8 @@ componentWillUnmount() {
   this.unsubscribe();
 }
 ```
+You could replace `this.unsubscribe` and `this.unsubscribe()` with
+`this.x` and `this.x()`.
 
-## ? Could you use
-```
-componentDidMount() {
-this.x = ...... subscribe()
-... ...
-```
-
-and
-```
-componentWillMount() {
-  this.x()
-}
-```
 
 ?
