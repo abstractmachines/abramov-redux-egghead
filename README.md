@@ -1840,3 +1840,36 @@ const TodoApp = () => (
 
 7. Great! Now, instead of explicitly passing the store down through props,
 we pass it implicitly via context.
+
+TODO
+## ???? ? ? ? unsubscribe in lifecycle TODO
+
+This pattern looks like use of a function you fire in the destructor. As covered in
+videos prior, `unsubscribe()` isn't available. You could use anything.
+```
+componentDidMount() {
+  const { store } = this.context
+  this.unsubscribe = store.subscribe(() =>
+    this.forceUpdate()
+  );
+}
+componentWillUnmount() {
+  this.unsubscribe();
+}
+```
+
+## ? Could you use
+```
+componentDidMount() {
+this.x = ...... subscribe()
+... ...
+```
+
+and
+```
+componentWillMount() {
+  this.x()
+}
+```
+
+?

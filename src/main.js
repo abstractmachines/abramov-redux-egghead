@@ -105,7 +105,6 @@ const TodoList = ({
 class VisibleTodoList extends Component {
   componentDidMount() {
     const { store } = this.context // ES6 destructuring, means: store = props.store
-
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     );
@@ -197,7 +196,7 @@ const Link = ({
     <a href='#'
       onClick={e => {
         e.preventDefault();
-        onClick(filter);
+        onClick(active);
       }}
       >
         {children}
@@ -218,9 +217,9 @@ class FilterLink extends Component {
   }
 
   render() {
-    const props = this.props;
+    const props = this.props
     const { store } = this.context
-    const state = store.getState();
+    const state = store.getState()
 
     return (
       <Link
