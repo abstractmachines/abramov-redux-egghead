@@ -104,6 +104,8 @@ const TodoList = ({
 // Connects TodoList to the Redux store.
 class VisibleTodoList extends Component {
   componentDidMount() {
+    const { store } = this.props // ES6 destructuring, means: store = props.store
+
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     );
@@ -114,6 +116,7 @@ class VisibleTodoList extends Component {
 
   render () {
     const props = this.props
+    const { store } = props
     const state = store.getState()
 
     return (
@@ -136,7 +139,7 @@ class VisibleTodoList extends Component {
 }
 
 // Container.
-const AddTodo = () => {
+const AddTodo = ({ store }) => {
   let input
 
   return (
@@ -199,6 +202,7 @@ const Link = ({
 // Container.
 class FilterLink extends Component {
   componentDidMount() {
+    const { store } = this.props
     this.unsubscribe = store.subscribe(() =>
       this.forceUpdate()
     );
@@ -209,6 +213,7 @@ class FilterLink extends Component {
 
   render() {
     const props = this.props;
+    const { store } = props
     const state = store.getState();
 
     return (
@@ -231,13 +236,13 @@ class FilterLink extends Component {
 }
 
 // Presentational.
-const Footer = () => {
+const Footer = ({ store }) => {
   return (
     <div>
       <p> Show:
-        {' '} <FilterLink filter='SHOW_ALL'>  ALL </FilterLink>
-        {' '} <FilterLink filter='SHOW_ACTIVE'>  ACTIVE </FilterLink>
-        {' '} <FilterLink filter='SHOW_COMPLETED'>  COMPLETED </FilterLink>
+        {' '} <FilterLink filter='SHOW_ALL' store={store}>  ALL </FilterLink>
+        {' '} <FilterLink filter='SHOW_ACTIVE' store={store}>  ACTIVE </FilterLink>
+        {' '} <FilterLink filter='SHOW_COMPLETED' store={store}>  COMPLETED </FilterLink>
       </p>
     </div>
   )
@@ -245,14 +250,13 @@ const Footer = () => {
 
 const TodoApp = ({ store }) => (
   <div>
-    <AddTodo />
-    <VisibleTodoList />
-    <Footer />
+    <AddTodo store={store}/>
+    <VisibleTodoList store={store}/>
+    <Footer store={store}/>
   </div>
 )
 
 ReactDOM.render(
-  <TodoApp
-  store={createStore(todoApp)}/>,
+  <TodoApp store={createStore(todoApp)}/>,
   document.getElementById('root')
 )

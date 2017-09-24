@@ -1670,24 +1670,58 @@ like `componentDidMount` and `componentWillUnmount`.
 
 That isn't how a real Redux app works; instead, we would use `connect().`
 
-## Connect() and Passing the Store Down Explicitly via Props
+## Passing the Store Down Explicitly via Props (video 24)
+
+This involves quite a bit of code that gets redone.
+
+We had to add `{ store }` to a LOT of things... we'll fix this later.
 
 ### Improvements: store and testability
-Rather than creating a new instance of store, we may want to test with a mock store
-Give Component needs a reference to the store; pass store into TodoApp props.
+- Rather than creating a new instance of store, we may want to test with a mock store
+- Universal, server-rendered apps change store instances for each request
+(different requests => different data)
+
+- So:
+
+**Each Component needs a reference to the store; pass store into TodoApp props:**
 
 ```
 const TodoApp = ({ store }) => (
   <div>
-    <AddTodo />
-    <VisibleTodoList />
-    <Footer />
+    <AddTodo store={store}/>
+    <VisibleTodoList store={store}/>
+    <Footer store={store}/>
   </div>
 )
 
 ReactDOM.render(
-  <TodoApp
-  store={createStore(todoApp)}/>,
+  <TodoApp store={createStore(todoApp)}/>,
   document.getElementById('root')
 )
 ```
+
+Container Components get:
+```
+const { store } = this.props  // ES6 destructuring, means: store = props.store
+```
+
+and/or
+```
+const AddTodo = ({ store })
+```
+
+and/or
+```
+const Footer = ({ store })
+....
+....
+FilterLink filter='SHOW_ALL' store={store}>
+```
+
+and/or
+```
+const { store } = props
+const state = store.getState()
+```
+
+in Footer, because FilterLink needs the store.
