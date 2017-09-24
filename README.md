@@ -1884,6 +1884,8 @@ Provider.childContextTypes = {
 
 ## Generating Containers with connect() from React Redux (video 27-28)
 
+>>> how to write mapStateToProps() and mapDispatchToProps() functions and use connect() from React Redux library to generate container components.
+
 ## Containers need to:
 - Re-render when store state changes
 - Unsubscribe from store when they unmount
@@ -2009,6 +2011,13 @@ The connect function does that for us.
 them by hand, with the `connect()` method from React Redux.
 
 In this case, we saved on 40 lines of boilerplate.
+
+## Video 28
+
+>>> how to inject dispatch() as a prop into a React component by using connect() from React Redux library.
+
+
+
 
 ..............................
 
