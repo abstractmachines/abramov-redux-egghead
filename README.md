@@ -1683,7 +1683,7 @@ We had to add `{ store }` to a LOT of things... we'll fix this later.
 
 - So:
 
-**Each Component needs a reference to the store; pass store into TodoApp props:**
+#### Each Component needs a reference to the store; pass store into TodoApp props:
 
 ```
 const TodoApp = ({ store }) => (
@@ -1725,3 +1725,5 @@ const state = store.getState()
 ```
 
 in Footer, because FilterLink needs the store.
+
+#### Each Container Component reads the store instance through the props
