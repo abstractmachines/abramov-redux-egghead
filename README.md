@@ -1728,10 +1728,14 @@ in Footer, because FilterLink needs the store.
 
 #### Each Container Component reads the store instance through the props
 
-## Passing the Store Down Implicitly via Props (video 25)
+## Passing the Store Down Implicitly via Context (video 25)
 Container Components need to subscribe to the store changes.
 
 Let's use the advanced React feature called `context.`
+
+>>> We will pass the store
+down through the context so that Containers can read the store and subscribe
+to its changes.
 
 1. Create a Parent Component that invokes `getChildContext()`:
 ```
@@ -1848,7 +1852,7 @@ we pass it implicitly via context.
 - don't
 
 
-## Provider in React Redux
+## Provider in React Redux (video 26)
 The code we've written for Provider is included in lib called `react-redux`.
 
 ```
@@ -1872,6 +1876,130 @@ Provider.childContextTypes = {
 }
 ```
 
+## Generating Containers with connect() from React Redux (video 27)
+
+## Containers need to:
+- Re-render when store state changes
+- Unsubscribe from store when they unmount
+- Render presentational components with props calculated from current state of store
+- Define context through contextTypes
+
+We can represent what a Container does with `mapStateToProps()` and `mapDispatchToProps()`:
+
+
+`mapStateToProps()`:
+
+- Maps state of Redux store to the props of the TodoList components.
+- Takes in state of Redux store.
+- Returns props to pass to Presentational TodoList component to render it with current state.
+
+```
+const mapStateToProps = (state) => {
+  return {
+    todos: getVisibleTodos(
+      state.todos,
+      state.visibilityFilter
+    )
+  }
+}
+```
+
+
+`mapDispatchToProps()`:
+
+- Maps dispatch method of store to callback props of TodoList component.
+- Specifies behavior: which callback prop dispatches which action.
+- Returns props to be passed to TodoList component
+```
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onTodoClick: (id) => {
+      dispatch({ // was store.dispatch
+        type: 'TOGGLE_TODO',
+        id
+      })
+    }
+  }
+}
+```
+
+These two functions are essentially generated as part of the `{ connect }` package:
+
+- `import { connect } from 'react-redux'`
+
+- Generate your Container by declaring it with `connect()`:
+
+```
+const VisibleTodoList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+  )
+```
+
+Wait...
+
+This is a curried function, so you have to call it once again.
+
+We will pass the presentational component that we want to wrap and pass the props to,
+when we call it again.
+
+```
+const VisibleTodoList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+  )(TodoList)
+```
+
+- Delete the code for your old custom Container Component:
+```
+class VisibleTodoList extends Component {
+  componentDidMount() {
+    const { store } = this.context // ES6 destructuring, means: store = props.store
+    this.unsubscribe = store.subscribe(() =>
+      this.forceUpdate()
+    );
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  render () {
+    const props = this.props
+    const { store } = this.context
+    const state = store.getState()
+
+    return (
+      <TodoList
+        todos={
+          getVisibleTodos(
+            state.todos,
+            state.visibilityFilter
+          )
+        }
+        onTodoClick={id =>
+          store.dispatch({
+            type: 'TOGGLE_TODO',
+            id
+          })
+        }
+      />
+    )
+  }
+}
+VisibleTodoList.contextTypes = {
+  store: React.PropTypes.object
+}
+```
+
+>>> So we don't need to write code to connect to the store, or specify contextTypes.
+The connect function does that for us.
+
+>>> We can replace our Containers and instead generate them instead of writing
+them by hand, with the `connect()` method from React Redux.
+
+In this case, we saved on 40 lines of boilerplate.
+
 ..............................
 
 ## A note about unsubscribe() in lifecycle TODO
@@ -1891,6 +2019,3 @@ componentWillUnmount() {
 ```
 You could replace `this.unsubscribe` and `this.unsubscribe()` with
 `this.x` and `this.x()`.
-
-
-?

@@ -1,7 +1,7 @@
 import {createStore, combineReducers} from 'redux'
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
+import { connect, Provider } from 'react-redux'
 import expect from 'expect'
 import deepFreeze from 'deep-freeze'
 
@@ -101,45 +101,38 @@ const TodoList = ({
   </ul>
 )
 
-// Container.
-// Connects TodoList to the Redux store.
-class VisibleTodoList extends Component {
-  componentDidMount() {
-    const { store } = this.context // ES6 destructuring, means: store = props.store
-    this.unsubscribe = store.subscribe(() =>
-      this.forceUpdate()
-    );
-  }
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  render () {
-    const props = this.props
-    const { store } = this.context
-    const state = store.getState()
-
-    return (
-      <TodoList
-        todos={
-          getVisibleTodos(
-            state.todos,
-            state.visibilityFilter
-          )
-        }
-        onTodoClick={id =>
-          store.dispatch({
-            type: 'TOGGLE_TODO',
-            id
-          })
-        }
-      />
+// Maps state of Redux store to the props of the TodoList components.
+// Takes in state of Redux store.
+// Returns props to pass to Presentational TodoList component to render it with current state.
+const mapStateToProps = (state) => {
+  return {
+    todos: getVisibleTodos(
+      state.todos,
+      state.visibilityFilter
     )
   }
 }
-VisibleTodoList.contextTypes = {
-  store: React.PropTypes.object
+
+// Maps dispatch method of store to callback props of TodoList component.
+// Returns props to be passed to TodoList component
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onTodoClick: (id) => {
+      dispatch({ // was store.dispatch
+        type: 'TOGGLE_TODO',
+        id
+      })
+    }
+  }
 }
+
+// Container. Generated.
+// Connects TodoList to the Redux store.
+const VisibleTodoList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodoList)
+
 
 // Container.
 const AddTodo = (props, { store }) => {
