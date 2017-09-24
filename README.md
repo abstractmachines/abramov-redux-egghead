@@ -1884,8 +1884,12 @@ Provider.childContextTypes = {
 - Render presentational components with props calculated from current state of store
 - Define context through contextTypes
 
-We can represent what a Container does with `mapStateToProps()` and `mapDispatchToProps()`:
+We can represent what a Container does with 3 things:
+1. `mapStateToProps()` function
+2. `mapDispatchToProps()` function
+3. Declaring the Container Component with `connect()` from React Redux.
 
+>>> Writing the functions
 
 `mapStateToProps()`:
 
@@ -1904,14 +1908,12 @@ const mapStateToProps = (state) => {
 }
 ```
 
-
 `mapDispatchToProps()`:
 
 - Maps dispatch method of store to callback props of TodoList component.
 - Specifies behavior: which callback prop dispatches which action.
-- Returns props to be passed to TodoList component
+- Returns props to be passed to TodoList component.
 ```
-
 const mapDispatchToProps = (dispatch) => {
   return {
     onTodoClick: (id) => {
@@ -1924,7 +1926,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 ```
 
-These two functions are essentially generated as part of the `{ connect }` package:
+>>> Using connect()
 
 - `import { connect } from 'react-redux'`
 
@@ -1951,7 +1953,9 @@ const VisibleTodoList = connect(
   )(TodoList)
 ```
 
-- Delete the code for your old custom Container Component:
+>>> Delete old custom Container Component you wrote by hand
+
+- Delete:
 ```
 class VisibleTodoList extends Component {
   componentDidMount() {
