@@ -39,8 +39,8 @@ Converting Class Components to Functional Components (video 2-21)
 3. Passing Store Explicitly Through Props (video 24)
 4. Passing the Store Down Implicitly via Context (video 25)
 5. Provider in React Redux imports Context ! (video 26)
-6. Generating Containers with connect() from React Redux (video 27-28)
-7.
+6. Generating Containers with connect() from React Redux (video 27-29)
+7. Extracting Action Creators (video 30)
 
 <a href='#i' id='i' class='anchor' aria-hidden='true'>Part I</a>
 # Part I: Intro to Redux; Counter App

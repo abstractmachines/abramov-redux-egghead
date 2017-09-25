@@ -232,6 +232,7 @@ const FilterLink = connect(
   mapDispatchToPropsLink
 )(Link) // FilterLink renders Link
 
+
 // Presentational.
 const Footer = () => {
   return (
