@@ -7,6 +7,38 @@ import deepFreeze from 'deep-freeze'
 
 let nextTodoId = 0
 
+/* ***** Action Creators ***** ***** */
+// These take arguments about the action.
+// These return the action object.
+// Action creators document your software: what actions components can dispatch.
+// Instead of dispatching inline.
+
+const addTodoActionCreator = (text) => {
+  return {
+    type: 'ADD_TODO',
+    id: nextTodoId++,
+    text
+  }
+}
+
+const setVisibilityFilterActionCreator = (filter) => {
+  return {
+      type: 'SET_VISIBILITY_FILTER',
+      filter: filter
+    }
+}
+
+const toggleTodoActionCreator = (id) => {
+  return {
+      type: 'TOGGLE_TODO',
+      id
+  }
+}
+
+/* ***** Components and Reducers ***** ***** */
+
+/* ***** Reducers ***** ***** */
+
 // REDUCER
 // `state` refers to individual todo.
 // Creates, updates todo in response to an action.
@@ -70,6 +102,7 @@ const todoApp = combineReducers({
   visibilityFilter
 })
 
+/* ***** Components ***** ***** */
 
 // Presentational.
 const Todo = ({
@@ -118,10 +151,7 @@ const mapStateToPropsTodoList = (state) => {
 const mapDispatchToPropsTodoList = (dispatch) => {
   return {
     onTodoClick: (id) => {
-      dispatch({ // was store.dispatch
-        type: 'TOGGLE_TODO',
-        id
-      })
+      dispatch(toggleTodoActionCreator(id))
     }
   }
 }
@@ -142,11 +172,7 @@ let AddTodo = ({ dispatch }) => {
     <div>
       <input ref={node => {input = node}} />
       <button onClick={() => {
-            dispatch({
-              type: 'ADD_TODO',
-              id: nextTodoId++,
-              text: input.value,
-            })
+            dispatch(addTodoActionCreator(input.value))
         input.value = ''
       }}>
         Add Todo
@@ -219,10 +245,9 @@ const mapDispatchToPropsLink = (
 ) => {
   return {
     onClick: () => {
-      dispatch({
-        type: 'SET_VISIBILITY_FILTER',
-        filter: ownProps.filter
-      })
+      dispatch(
+        setVisibilityFilterActionCreator(ownProps.filter)
+      )
     }
   }
 }

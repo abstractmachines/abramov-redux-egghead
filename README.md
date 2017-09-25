@@ -2166,6 +2166,39 @@ const FilterLink = connect(
 )(Link) // FilterLink renders Link
 ```
 
+## Extracting Action Creators (video 30)
+
+It would be nice if dispatching `ADD_TODO`, for example, did not need to know about
+the id.
+
+Instead of dispatching actions inline, do this:
+
+```
+const addTodoActionCreator = (text) => {
+  return {
+    type: 'ADD_TODO',
+    id: nextTodoId++,
+    text
+  }
+}
+```
+
+and then, this:
+```
+<button onClick={() => {
+      dispatch(addTodoActionCreator(input.value))
+  input.value = ''
+}}>
+  Add Todo
+</button>
+```
+
+Note that Action Creators help document code (what actions can components dispatch?),
+and are often better than just dispatching actions inline.
+
+That concludes the videos!
+
+Thanks to Dan Abramov.
 
 
 ..............................
