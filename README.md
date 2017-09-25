@@ -2080,6 +2080,52 @@ AddTodo = connect(
 )(AddTodo) // 3. Wrap AddTodo itself.
 ```
 
+That looks great, and works!
+
+### However, it's wasteful to subscribe to the store unnecessarily.
+
+Change this, where we subscribe to store:
+```
+AddTodo = connect(
+  state => {
+    return {};
+  },
+  ... ...
+```
+
+To this, so we don't subscribe:
+```
+AddTodo = connect(
+  null,
+  ... ...
+```
+
+### If you specify null or falsey value in connect as 2nd arg,
+### you'll get dispatch injected as a prop automagically!
+
+So change this:
+```
+AddTodo = connect(
+  null,
+  dispatch => {
+    return { dispatch };
+  }
+)(AddTodo)
+```
+
+To this:
+```
+AddTodo = connect(
+  null,
+  null
+)(AddTodo)
+```
+
+Condense it even more:
+```
+AddTodo = connect()(AddTodo)
+```
+
 
 
 ..............................
