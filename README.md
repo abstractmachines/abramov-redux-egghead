@@ -2126,6 +2126,46 @@ Condense it even more:
 AddTodo = connect()(AddTodo)
 ```
 
+## Generating Containers : FooterLink
+
+Same steps as above. Here's the code.
+
+Remember, we will deleted FilterLink entirely, and replace with:
+
+```
+const mapStateToPropsLink = (
+  state,
+  ownProps
+  // Since it's common to use Container props when calculating child props,
+  // we name child props = ownProps.
+) => {
+  return {
+    active: ownProps.filter === state.visibilityFilter
+  }
+}
+
+const mapDispatchToPropsLink = (
+  dispatch,
+  ownProps
+) => {
+  return {
+    onClick: () => {
+      dispatch({
+        type: 'SET_VISIBILITY_FILTER',
+        filter: ownProps.filter
+      })
+    }
+  }
+}
+```
+
+```
+const FilterLink = connect(
+  mapStateToPropsLink,
+  mapDispatchToPropsLink
+)(Link) // FilterLink renders Link
+```
+
 
 
 ..............................
